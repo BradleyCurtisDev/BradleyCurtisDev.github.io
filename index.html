@@ -3,9 +3,789 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Site</title>
+  <title>Bradley Curtis | Game Developer</title>
+  <meta name="description" content="Portfolio of Bradley Curtis, game developer. Explore the skill tree.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #07080c;
+      --panel: #0d0f16;
+      --line: #222633;
+      --text: #e9ebf1;
+      --muted: #8d93a5;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Barlow', system-ui, sans-serif;
+      overflow: hidden;
+    }
+
+    .app {
+      height: 100vh;
+      height: 100dvh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      background: radial-gradient(ellipse 60% 55% at 50% 45%, #12151f 0%, var(--bg) 75%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ---------- TOP BAR ---------- */
+    .bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 28px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .brand { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+    .brand-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 1.35rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .brand-role {
+      color: var(--muted);
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .progress { display: flex; align-items: baseline; gap: 12px; }
+    .progress-label {
+      color: var(--muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .progress-count {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 1.4rem;
+    }
+
+    /* ---------- TREE ---------- */
+    .tree-wrap {
+      min-height: 0;
+      overflow: auto;
+      transition: padding-right 0.35s cubic-bezier(.2, .8, .2, 1);
+    }
+    #tree { display: block; width: 100%; height: 100%; min-width: 760px; }
+
+    .edge {
+      fill: none;
+      stroke: var(--c);
+      stroke-width: 3;
+      opacity: 0.38;
+      transition: opacity 0.4s;
+    }
+    .edge.lit { opacity: 1; }
+    .edge.draw {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      animation: draw 0.8s ease-out forwards;
+      animation-delay: var(--ed);
+    }
+    .edge.locked {
+      stroke: #272c39;
+      stroke-width: 2.5;
+      stroke-dasharray: 2 7;
+      stroke-linecap: round;
+      opacity: 0;
+      animation: fade 0.6s ease forwards;
+      animation-delay: var(--ed);
+    }
+    .edgeglow {
+      fill: none;
+      stroke: var(--c);
+      stroke-width: 9;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .edgeglow.lit { opacity: 0.5; }
+
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    @keyframes fade { to { opacity: 1; } }
+
+    .node {
+      outline: none;
+      cursor: pointer;
+      opacity: 0;
+      animation: fade 0.5s ease forwards;
+      animation-delay: var(--nd);
+    }
+    .node .inner {
+      transform-box: fill-box;
+      transform-origin: center;
+      transition: transform 0.2s;
+    }
+    .node:hover .inner, .node:focus-visible .inner { transform: scale(1.08); }
+
+    .glow { opacity: 0.35; transition: opacity 0.2s; }
+    .node:hover .glow, .node:focus-visible .glow, .node.visited .glow { opacity: 0.85; }
+
+    .disc { fill: #0b0d13; stroke: var(--c); stroke-width: 2.5; transition: fill 0.25s; }
+    .icon {
+      fill: none;
+      stroke: var(--c);
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: stroke 0.25s;
+    }
+    .node.visited .disc { fill: var(--c); }
+    .node.visited .icon { stroke: #07080c; }
+    .node.selected .disc, .node:focus-visible .disc { stroke: #fff; stroke-width: 3.2; }
+
+    .pill rect { fill: #07080c; stroke: var(--c); stroke-width: 1.3; }
+    .pill text {
+      fill: var(--c);
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+    .node.visited .pill text { fill: var(--text); }
+
+    .pulse {
+      fill: none;
+      stroke: var(--c);
+      stroke-width: 2;
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: pulse 2.2s ease-out infinite;
+      animation-delay: 2.4s;
+      pointer-events: none;
+    }
+    body.started .pulse { display: none; }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.7; }
+      100% { transform: scale(1.55); opacity: 0; }
+    }
+
+    .node.locked { cursor: not-allowed; }
+    .node.locked .disc { stroke: #2b303d; stroke-width: 2; }
+    .node.locked .icon { stroke: #3a4050; }
+    .node.locked:hover .inner { transform: none; }
+
+    .count-label {
+      fill: var(--c);
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .count-num {
+      fill: var(--c);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 40px;
+    }
+
+    /* ---------- BOTTOM HINTS ---------- */
+    .hints {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 28px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      gap: 16px;
+    }
+    .hints span.group { display: inline-flex; align-items: center; margin-right: 22px; }
+    .key {
+      display: inline-block;
+      padding: 3px 9px;
+      margin-right: 9px;
+      border: 1px solid #3a3f50;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #cfd3de;
+    }
+    .reset {
+      background: none;
+      border: 0;
+      color: var(--muted);
+      font: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+    }
+    .reset:hover { color: var(--text); }
+
+    /* ---------- SIDE PANEL ---------- */
+    .panel {
+      position: fixed;
+      top: 0; right: 0; bottom: 0;
+      width: min(440px, 100%);
+      background: var(--panel);
+      border-left: 1px solid var(--line);
+      overflow-y: auto;
+      z-index: 20;
+      transform: translateX(100%);
+      visibility: hidden;
+      transition: transform 0.35s cubic-bezier(.2, .8, .2, 1), visibility 0s 0.35s;
+    }
+    .panel.open {
+      transform: none;
+      visibility: visible;
+      transition: transform 0.35s cubic-bezier(.2, .8, .2, 1), visibility 0s 0s;
+    }
+    .panel::before {
+      content: "";
+      display: block;
+      height: 4px;
+      background: var(--c);
+      position: sticky;
+      top: 0;
+    }
+    .panel-inner { padding: 26px 30px 48px; }
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+    .tag {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--c);
+    }
+    .close {
+      background: none;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+    }
+    .close:hover { color: var(--text); border-color: #454b5e; }
+
+    .panel h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2.3rem, 5vw, 3.1rem);
+      line-height: 1;
+      text-transform: uppercase;
+      margin: 0 0 10px;
+    }
+    .sub { color: var(--muted); margin: 0 0 26px; font-size: 1.02rem; }
+    .media img {
+      width: 100%;
+      display: block;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      margin-bottom: 24px;
+    }
+    .body p, .body ul { color: #c6cad6; line-height: 1.65; margin: 0 0 1em; font-size: 1.04rem; }
+    .body ul { padding-left: 1.2em; }
+    .body h3 {
+      font-size: 0.85rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--c);
+      margin: 1.8em 0 0.6em;
+    }
+    .facts { margin: 28px 0 0; border-top: 1px solid var(--line); }
+    .facts div {
+      display: flex;
+      gap: 16px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.95rem;
+    }
+    .facts dt { width: 100px; flex-shrink: 0; color: var(--muted); }
+    .facts dd { margin: 0; }
+    .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+    .links a {
+      border: 1px solid var(--c);
+      color: var(--c);
+      padding: 9px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: background 0.2s, color 0.2s;
+    }
+    .links a:hover { background: var(--c); color: #07080c; }
+
+    .scrim {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 15;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    @media (min-width: 861px) {
+      .app.panel-open .tree-wrap { padding-right: 440px; }
+    }
+
+    @media (max-width: 860px) {
+      .bar, .hints { padding-left: 16px; padding-right: 16px; }
+      .progress-label { display: none; }
+      .hints .desktop-only { display: none; }
+      .panel {
+        top: auto;
+        left: 0;
+        width: 100%;
+        height: min(74vh, 660px);
+        border-left: 0;
+        border-top: 1px solid var(--line);
+        border-radius: 16px 16px 0 0;
+        transform: translateY(100%);
+      }
+      .panel.open { transform: none; }
+      .app.panel-open .scrim { opacity: 1; pointer-events: auto; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .edge.draw { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; }
+      .edge.locked, .node { animation: none; opacity: 1; }
+      .pulse { display: none; }
+      .panel, .panel.open, .tree-wrap { transition: none; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello, world!</h1>
+
+  <div class="app" id="app">
+
+    <header class="bar">
+      <div class="brand">
+        <span class="brand-name">Bradley Curtis</span>
+        <span class="brand-role">Game Developer</span>
+      </div>
+      <div class="progress">
+        <span class="progress-label">Nodes unlocked</span>
+        <span class="progress-count" id="count">0/8</span>
+      </div>
+    </header>
+
+    <main class="tree-wrap" id="treeWrap">
+      <svg id="tree" viewBox="40 100 920 680" role="group" aria-label="Portfolio skill tree">
+        <defs>
+          <radialGradient id="g-about">
+            <stop offset="0" stop-color="#35e08a" stop-opacity="0.45"/>
+            <stop offset="1" stop-color="#35e08a" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="g-games">
+            <stop offset="0" stop-color="#ffc233" stop-opacity="0.45"/>
+            <stop offset="1" stop-color="#ffc233" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="blur" filterUnits="userSpaceOnUse" x="0" y="50" width="1000" height="800">
+            <feGaussianBlur stdDeviation="5"/>
+          </filter>
+        </defs>
+        <g id="glowLayer" filter="url(#blur)"></g>
+        <g id="edgeLayer"></g>
+        <g id="nodeLayer"></g>
+        <g id="labelLayer"></g>
+      </svg>
+    </main>
+
+    <footer class="hints">
+      <div>
+        <span class="group"><span class="key">CLICK</span>a node to unlock it</span>
+        <span class="group desktop-only"><span class="key">ESC</span>close panel</span>
+      </div>
+      <button class="reset" id="reset"><span class="key">R</span>Reset skill tree</button>
+    </footer>
+
+    <div class="scrim" id="scrim"></div>
+
+    <aside class="panel" id="panel" role="dialog" aria-labelledby="panelTitle" aria-hidden="true">
+      <div class="panel-inner">
+        <div class="panel-head">
+          <span class="tag" id="pTag"></span>
+          <button class="close" id="close" aria-label="Close panel">&#10005;</button>
+        </div>
+        <h2 id="panelTitle"></h2>
+        <p class="sub" id="pSub"></p>
+        <div class="media" id="pMedia"></div>
+        <div class="body" id="pBody"></div>
+        <dl class="facts" id="pFacts"></dl>
+        <div class="links" id="pLinks"></div>
+      </div>
+    </aside>
+
+  </div>
+
+  <noscript><p style="position:fixed;top:80px;left:0;right:0;text-align:center;color:#8d93a5">This portfolio needs JavaScript turned on to show the skill tree.</p></noscript>
+
+  <script>
+    /* =====================================================================
+       EDIT YOUR CONTENT HERE
+       Each node below opens the side panel when clicked. For each one change:
+         label     short text on the node's tag
+         title     big heading in the panel
+         subtitle  small line under the heading
+         image     optional, e.g. 'images/game1.png' (leave '' for none)
+         body      your text. Use <p>...</p> for paragraphs. <h3> and <ul> also work.
+         facts     rows of [name, value] shown under the text
+         links     buttons, as [text, url]
+       Keep the text inside the backticks ` `.
+       ===================================================================== */
+
+    const BRANCHES = {
+      about: { name: 'About me', color: '#35e08a' },
+      games: { name: 'Games',    color: '#ffc233' }
+    };
+
+    const NODES = [
+
+      /* ---------- ABOUT ME BRANCH ---------- */
+      {
+        id: 'who', branch: 'about', x: 300, y: 560, trunk: true, icon: 'user',
+        label: 'Who I am',
+        title: 'Who I am',
+        subtitle: 'Game developer',
+        image: '',
+        body: `
+          <p>Write your introduction here: who you are, how you got into making games, and what you enjoy most about it.</p>
+          <p>Add another paragraph if you like.</p>
+        `,
+        facts: [['Based in', 'Your town, UK'], ['Focus', 'Gameplay, tools, etc.']],
+        links: []
+      },
+      {
+        id: 'exp', branch: 'about', x: 200, y: 420, parents: ['who'], icon: 'briefcase',
+        label: 'Experience',
+        title: 'Experience',
+        subtitle: 'Where I have worked',
+        image: '',
+        body: `
+          <h3>Job title, Company</h3>
+          <p>2024 to now. Describe what you did and what you achieved.</p>
+          <h3>Previous role or course</h3>
+          <p>2022 to 2024. Describe what you did and what you achieved.</p>
+        `,
+        facts: [],
+        links: []
+      },
+      {
+        id: 'skills', branch: 'about', x: 400, y: 420, parents: ['who'], icon: 'code',
+        label: 'Tools & skills',
+        title: 'Tools & skills',
+        subtitle: 'What I build with',
+        image: '',
+        body: `
+          <p>Write about the tools and skills you are strongest in.</p>
+        `,
+        facts: [['Engines', 'Unity, Unreal, Godot'], ['Languages', 'C#, C++, Python'], ['Other', 'Git, Blender']],
+        links: []
+      },
+      {
+        id: 'contact', branch: 'about', x: 300, y: 280, parents: ['exp', 'skills'], icon: 'mail',
+        label: 'Contact',
+        title: 'Get in touch',
+        subtitle: 'Say hello',
+        image: '',
+        body: `
+          <p>Write a short note about what you are looking for and how people can reach you.</p>
+        `,
+        facts: [['Email', 'your@email.com']],
+        links: [['Email me', 'mailto:your@email.com'], ['GitHub', 'https://github.com/BradleyCurtisDev']]
+      },
+
+      /* ---------- GAMES BRANCH ---------- */
+      {
+        id: 'g1', branch: 'games', x: 700, y: 560, trunk: true, icon: 'gamepad',
+        label: 'Game One',
+        title: 'Game Title One',
+        subtitle: 'Genre, year',
+        image: '',
+        body: `
+          <p>Describe the game: what it is, what you built, and what you are proudest of.</p>
+          <p>Add more paragraphs about the challenges or what you learned.</p>
+        `,
+        facts: [['Year', '2025'], ['Role', 'Programmer'], ['Made with', 'Unity, C#'], ['Team', 'Solo']],
+        links: [['Play', '#'], ['Source', '#']]
+      },
+      {
+        id: 'g2', branch: 'games', x: 600, y: 420, parents: ['g1'], icon: 'star',
+        label: 'Game Two',
+        title: 'Game Title Two',
+        subtitle: 'Genre, year',
+        image: '',
+        body: `
+          <p>Describe the game: what it is, what you built, and what you are proudest of.</p>
+        `,
+        facts: [['Year', '2024'], ['Role', 'Gameplay programmer'], ['Made with', 'Unreal, C++'], ['Team', 'Team of 4']],
+        links: [['Play', '#']]
+      },
+      {
+        id: 'g3', branch: 'games', x: 800, y: 420, parents: ['g1'], icon: 'cube',
+        label: 'Game Three',
+        title: 'Game Title Three',
+        subtitle: 'Genre, year',
+        image: '',
+        body: `
+          <p>Describe the game: what it is, what you built, and what you are proudest of.</p>
+        `,
+        facts: [['Year', '2023'], ['Role', 'Solo'], ['Made with', 'Godot'], ['Event', 'Game jam']],
+        links: [['Play', '#']]
+      },
+      {
+        id: 'g4', branch: 'games', x: 700, y: 280, parents: ['g2', 'g3'], icon: 'bolt',
+        label: 'Game Four',
+        title: 'Game Title Four',
+        subtitle: 'Genre, year',
+        image: '',
+        body: `
+          <p>Describe the game: what it is, what you built, and what you are proudest of.</p>
+        `,
+        facts: [['Year', '2022'], ['Role', 'Programmer'], ['Made with', 'Unity']],
+        links: [['Play', '#']]
+      },
+
+      /* ---------- LOCKED NODES (decoration, "more to come") ---------- */
+      { id: 'la', branch: 'about', x: 130, y: 290, parents: ['exp'],     locked: true },
+      { id: 'lb', branch: 'about', x: 240, y: 150, parents: ['contact'], locked: true },
+      { id: 'lc', branch: 'games', x: 870, y: 290, parents: ['g3'],      locked: true },
+      { id: 'ld', branch: 'games', x: 760, y: 150, parents: ['g4'],      locked: true }
+    ];
+
+    /* =====================================================================
+       END OF CONTENT. The code below builds the tree. You shouldn't need to
+       change it.
+       ===================================================================== */
+
+    const ICONS = {
+      user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',
+      briefcase: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/>',
+      code: '<path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/>',
+      mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+      gamepad: '<path d="M6 8h12a4 4 0 0 1 4 4v1a3 3 0 0 1-5.2 2L15 13H9l-1.8 2A3 3 0 0 1 2 13v-1a4 4 0 0 1 4-4z"/><path d="M7 10.5v3M5.5 12h3"/><circle cx="16" cy="11.5" r=".6"/><circle cx="18" cy="13" r=".6"/>',
+      star: '<path d="M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5L2.5 9.3l6.6-.8z"/>',
+      cube: '<path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/>',
+      bolt: '<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+      lock: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'
+    };
+
+    const SVG_NS = 'http://www.w3.org/2000/svg';
+    const STORE_KEY = 'bc-portfolio-visited';
+    const R = 34, R_LOCKED = 26;
+
+    const $ = (id) => document.getElementById(id);
+    const app = $('app'), panel = $('panel');
+
+    function el(name, attrs, parent) {
+      const e = document.createElementNS(SVG_NS, name);
+      for (const k in attrs) e.setAttribute(k, attrs[k]);
+      if (parent) parent.appendChild(e);
+      return e;
+    }
+
+    const byId = {};
+    NODES.forEach(n => byId[n.id] = n);
+
+    function depth(n) {
+      if (n.trunk || !n.parents) return 0;
+      return 1 + Math.max(...n.parents.map(p => depth(byId[p])));
+    }
+
+    // ----- saved progress -----
+    let visited = new Set();
+    try { visited = new Set(JSON.parse(localStorage.getItem(STORE_KEY) || '[]')); } catch (e) {}
+    const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify([...visited])); } catch (e) {} };
+
+    // ----- build edges -----
+    const glowLayer = $('glowLayer'), edgeLayer = $('edgeLayer'),
+          nodeLayer = $('nodeLayer'), labelLayer = $('labelLayer');
+    const edges = [];
+
+    function addEdge(d, node, opts) {
+      const color = BRANCHES[node.branch].color;
+      const delay = (0.2 + depth(node) * 0.4).toFixed(2) + 's';
+      if (!node.locked) {
+        const g = el('path', { d, class: 'edgeglow' }, glowLayer);
+        g.style.setProperty('--c', color);
+        edges.push({ g, node, always: opts.always, glow: true });
+      }
+      const p = el('path', { d, class: 'edge ' + (node.locked ? 'locked' : 'draw'), pathLength: 1 }, edgeLayer);
+      p.style.setProperty('--c', color);
+      p.style.setProperty('--ed', delay);
+      edges.push({ p, node, always: opts.always });
+    }
+
+    NODES.forEach(n => {
+      if (n.trunk) {
+        const bx = n.branch === 'about' ? 488 : 512;
+        addEdge(`M${bx} 790 V680 C${bx} 625,${n.x} 650,${n.x} ${n.y}`, n, { always: true });
+      }
+      (n.parents || []).forEach(pid => {
+        const a = byId[pid], ym = (a.y + n.y) / 2;
+        addEdge(`M${a.x} ${a.y} C${a.x} ${ym},${n.x} ${ym},${n.x} ${n.y}`, n, { always: false });
+      });
+    });
+
+    // ----- build nodes -----
+    const nodeEls = {};
+    NODES.forEach(n => {
+      const color = BRANCHES[n.branch].color;
+      const r = n.locked ? R_LOCKED : R;
+      const g = el('g', { class: 'node' + (n.locked ? ' locked' : ''), transform: `translate(${n.x} ${n.y})` }, nodeLayer);
+      g.style.setProperty('--c', color);
+      g.style.setProperty('--nd', (0.55 + depth(n) * 0.4).toFixed(2) + 's');
+
+      if (n.locked) {
+        el('title', {}, g).textContent = 'Locked: more to come';
+        g.setAttribute('aria-hidden', 'true');
+      } else {
+        g.setAttribute('tabindex', '0');
+        g.setAttribute('role', 'button');
+        g.setAttribute('aria-label', 'Open ' + n.label);
+        if (n.trunk) el('circle', { class: 'pulse', r }, g);
+      }
+
+      const inner = el('g', { class: 'inner' }, g);
+      if (!n.locked) el('circle', { class: 'glow', r: r + 18, fill: `url(#g-${n.branch})` }, inner);
+      el('circle', { class: 'disc', r }, inner);
+      const ic = el('g', { class: 'icon', transform: 'translate(-14 -14) scale(1.1667)' }, inner);
+      ic.innerHTML = ICONS[n.locked ? 'lock' : n.icon];
+      if (n.locked) ic.setAttribute('transform', 'translate(-11 -11) scale(0.9167)');
+
+      if (!n.locked) {
+        const pill = el('g', { class: 'pill', transform: `translate(0 ${r})` }, g);
+        el('rect', { rx: 10, ry: 10, height: 20, y: -10 }, pill);
+        const t = el('text', { y: 1 }, pill);
+        t.textContent = n.label;
+
+        g.addEventListener('click', () => openNode(n.id));
+        g.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openNode(n.id); }
+        });
+      }
+      nodeEls[n.id] = g;
+    });
+
+    // size pills to their text (re-run once fonts have loaded)
+    function fitPills() {
+      document.querySelectorAll('.pill').forEach(p => {
+        const w = p.querySelector('text').getBBox().width + 22;
+        const rect = p.querySelector('rect');
+        rect.setAttribute('width', w);
+        rect.setAttribute('x', -w / 2);
+      });
+    }
+    fitPills();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitPills);
+
+    // ----- branch counters near the trunks -----
+    const counters = {};
+    [['about', 458, 'end'], ['games', 542, 'start']].forEach(([b, x, anchor]) => {
+      const c = BRANCHES[b].color;
+      const lab = el('text', { x, y: 690, 'text-anchor': anchor, class: 'count-label' }, labelLayer);
+      lab.style.setProperty('--c', c);
+      lab.textContent = BRANCHES[b].name;
+      const num = el('text', { x, y: 728, 'text-anchor': anchor, class: 'count-num' }, labelLayer);
+      num.style.setProperty('--c', c);
+      counters[b] = num;
+    });
+
+    // ----- refresh visual state -----
+    let selected = null;
+    function refresh() {
+      NODES.forEach(n => {
+        if (n.locked) return;
+        nodeEls[n.id].classList.toggle('visited', visited.has(n.id));
+        nodeEls[n.id].classList.toggle('selected', selected === n.id);
+      });
+      edges.forEach(e => {
+        const lit = e.always || visited.has(e.node.id);
+        (e.p || e.g).classList.toggle('lit', lit);
+      });
+      let total = 0, done = 0;
+      Object.keys(BRANCHES).forEach(b => {
+        const list = NODES.filter(n => n.branch === b && !n.locked);
+        const d = list.filter(n => visited.has(n.id)).length;
+        counters[b].textContent = `${d}/${list.length}`;
+        total += list.length; done += d;
+      });
+      $('count').textContent = `${done}/${total}`;
+      document.body.classList.toggle('started', visited.size > 0);
+    }
+
+    // ----- side panel -----
+    let lastFocus = null;
+    function openNode(id) {
+      const n = byId[id], b = BRANCHES[n.branch];
+      panel.style.setProperty('--c', b.color);
+      $('pTag').textContent = b.name;
+      $('panelTitle').textContent = n.title;
+      $('pSub').textContent = n.subtitle || '';
+      $('pSub').style.display = n.subtitle ? '' : 'none';
+      $('pMedia').innerHTML = n.image ? `<img src="${n.image}" alt="${n.title}">` : '';
+      $('pBody').innerHTML = n.body || '';
+      $('pFacts').innerHTML = (n.facts || []).map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
+      $('pLinks').innerHTML = (n.links || []).map(([t, u]) =>
+        `<a href="${u}" ${u.startsWith('http') ? 'target="_blank" rel="noopener"' : ''}>${t}</a>`).join('');
+
+      visited.add(id); save();
+      selected = id;
+      lastFocus = nodeEls[id];
+      refresh();
+
+      app.classList.add('panel-open');
+      panel.classList.add('open');
+      panel.setAttribute('aria-hidden', 'false');
+      panel.scrollTop = 0;
+      $('close').focus({ preventScroll: true });
+    }
+
+    function closePanel() {
+      if (!panel.classList.contains('open')) return;
+      selected = null;
+      refresh();
+      app.classList.remove('panel-open');
+      panel.classList.remove('open');
+      panel.setAttribute('aria-hidden', 'true');
+      if (lastFocus) lastFocus.focus({ preventScroll: true });
+    }
+
+    function resetTree() {
+      visited = new Set(); save();
+      closePanel();
+      selected = null;
+      refresh();
+    }
+
+    $('close').addEventListener('click', closePanel);
+    $('scrim').addEventListener('click', closePanel);
+    $('reset').addEventListener('click', resetTree);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closePanel();
+      if ((e.key === 'r' || e.key === 'R') && !e.ctrlKey && !e.metaKey && !e.altKey) resetTree();
+    });
+
+    refresh();
+
+    // centre the tree on small screens where it scrolls sideways
+    const wrap = $('treeWrap');
+    wrap.scrollLeft = (wrap.scrollWidth - wrap.clientWidth) / 2;
+  </script>
 </body>
 </html>

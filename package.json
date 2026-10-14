@@ -1,0 +1,24 @@
+{
+  "name": "bradleycurtisdev.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "docs": "jsdoc -r src -d _site/api-docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BradleyCurtisDev/BradleyCurtisDev.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/BradleyCurtisDev/BradleyCurtisDev.github.io/issues"
+  },
+  "homepage": "https://github.com/BradleyCurtisDev/BradleyCurtisDev.github.io#readme",
+  "devDependencies": {
+    "jsdoc": "^4.0.5"
+  }
+}

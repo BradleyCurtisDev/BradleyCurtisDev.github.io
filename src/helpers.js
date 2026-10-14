@@ -18,7 +18,6 @@ function hash(s) {
   for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
   return (h >>> 0) / 4294967295;
 }
-
 /**
  * Splits text into lines no longer than `max` characters, breaking
  * only at spaces. A single word longer than `max` stays on its own line.
@@ -30,7 +29,6 @@ function hash(s) {
  * wrapLabel('Game Design Basics', 10); // ['Game', 'Design', 'Basics']
  */
 
-
 function wrapLabel(text, max) {
   const lines = [];
   let cur = '';
@@ -41,7 +39,6 @@ function wrapLabel(text, max) {
   if (cur) lines.push(cur);
   return lines;
 }
-
 /**
  * Builds an SVG path string for a curved branch from a parent node
  * to a child node, using a cubic Bézier curve.

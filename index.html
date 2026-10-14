@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bradley Curtis | Game Developer</title>
-  <meta name="description" content="Portfolio of Bradley Curtis, game developer. Explore the skill trees to see my projects and experience.">
+  <meta name="description"
+    content="Portfolio of Bradley Curtis, game developer. Explore the skill trees to see my projects and experience.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,8 +27,15 @@
       --font: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
     }
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
     body {
       margin: 0;
       background: var(--bg);
@@ -35,7 +44,10 @@
       -webkit-font-smoothing: antialiased;
       overflow: hidden;
     }
-    button { font-family: inherit; }
+
+    button {
+      font-family: inherit;
+    }
 
     .app {
       position: relative;
@@ -59,20 +71,55 @@
       background: var(--bar);
       border-bottom: 1px solid var(--line);
     }
-    .player { display: flex; align-items: center; gap: 14px; min-width: 0; }
+
+    .player {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
     .avatar {
-      width: 46px; height: 46px;
+      width: 46px;
+      height: 46px;
       flex: none;
       border-radius: 50%;
       overflow: hidden;
       border: 3px solid var(--accent);
     }
-    .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .avatar[hidden] { display: none; }
-    .pname { margin: 0; font-weight: 700; font-size: 1.45rem; line-height: 1.1; letter-spacing: -0.01em; white-space: nowrap; }
-    .pclass { font-size: 0.85rem; font-weight: 500; color: var(--muted); }
 
-    .tabs { display: flex; gap: 6px; justify-self: center; }
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .avatar[hidden] {
+      display: none;
+    }
+
+    .pname {
+      margin: 0;
+      font-weight: 700;
+      font-size: 1.45rem;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+    }
+
+    .pclass {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      justify-self: center;
+    }
+
     .tab {
       font-weight: 600;
       font-size: 0.95rem;
@@ -84,15 +131,35 @@
       cursor: pointer;
       transition: color 0.2s, background 0.2s, transform 0.15s;
     }
-    .tab:hover { color: var(--text); }
-    .tab[aria-selected="true"] { background: var(--text); color: var(--ink); box-shadow: 0 3px 0 #6b6b6b; }
-    .tab:active { transform: translateY(1px); }
-    .tab:focus-visible, .cta:focus-visible, .reset:focus-visible, .pg:focus-visible, .close:focus-visible {
+
+    .tab:hover {
+      color: var(--text);
+    }
+
+    .tab[aria-selected="true"] {
+      background: var(--text);
+      color: var(--ink);
+      box-shadow: 0 3px 0 #6b6b6b;
+    }
+
+    .tab:active {
+      transform: translateY(1px);
+    }
+
+    .tab:focus-visible,
+    .cta:focus-visible,
+    .reset:focus-visible,
+    .pg:focus-visible,
+    .close:focus-visible {
       outline: 3px solid var(--accent);
       outline-offset: 3px;
     }
 
-    .hud-right { display: flex; justify-content: flex-end; }
+    .hud-right {
+      display: flex;
+      justify-content: flex-end;
+    }
+
     .cta {
       font-weight: 600;
       font-size: 0.92rem;
@@ -105,8 +172,16 @@
       box-shadow: 0 4px 0 #6b6b6b;
       transition: transform 0.12s, box-shadow 0.12s;
     }
-    .cta:hover { transform: translateY(-1px); box-shadow: 0 5px 0 #6b6b6b; }
-    .cta:active { transform: translateY(3px); box-shadow: 0 1px 0 #6b6b6b; }
+
+    .cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 0 #6b6b6b;
+    }
+
+    .cta:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #6b6b6b;
+    }
 
     /* ---------- TREE ---------- */
     .tree-wrap {
@@ -116,7 +191,13 @@
       display: flex;
       transition: padding-right 0.35s cubic-bezier(.2, .8, .2, 1);
     }
-    #tree { margin: auto; flex: none; display: block; overflow: visible; }
+
+    #tree {
+      margin: auto;
+      flex: none;
+      display: block;
+      overflow: visible;
+    }
 
     .branch {
       fill: none;
@@ -124,46 +205,121 @@
       stroke-linecap: round;
       transition: stroke 0.4s;
     }
-    .branch.lit { stroke: var(--bc); }
+
+    .branch.lit {
+      stroke: var(--bc);
+    }
+
     .branch.draw {
       stroke-dasharray: 1;
       stroke-dashoffset: 1;
       animation: draw 0.9s cubic-bezier(.3, .7, .3, 1) forwards;
       animation-delay: var(--ed);
     }
+
     .branch.ghost {
       stroke-dasharray: 2 9;
       opacity: 0;
       animation: fade 0.6s ease forwards;
       animation-delay: var(--ed);
     }
-    @keyframes draw { to { stroke-dashoffset: 0; } }
-    @keyframes fade { to { opacity: 1; } }
 
-    .node { outline: none; cursor: pointer; }
+    @keyframes draw {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    @keyframes fade {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .node {
+      outline: none;
+      cursor: pointer;
+    }
+
     .node .appear {
       opacity: 0;
       animation: fade 0.3s ease forwards;
       animation-delay: var(--nd);
     }
-    .node .float { animation: float var(--fd, 5s) ease-in-out infinite; animation-delay: var(--fdl, 0s); }
-    @keyframes float { 50% { transform: translateY(-4px); } }
+
+    .node .float {
+      animation: float var(--fd, 5s) ease-in-out infinite;
+      animation-delay: var(--fdl, 0s);
+    }
+
+    @keyframes float {
+      50% {
+        transform: translateY(-4px);
+      }
+    }
+
     .node .hover {
       transform-box: fill-box;
       transform-origin: center;
       transition: transform 0.22s cubic-bezier(.3, 1.6, .5, 1);
     }
-    .node:hover .hover, .node:focus-visible .hover { transform: scale(1.1) translateY(-2px); }
-    .node:active .hover { transform: scale(0.96); }
-    .node.unlock .hover { animation: unlock 0.6s cubic-bezier(.3, 1.5, .5, 1); }
-    @keyframes unlock { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
 
-    .hit { fill: transparent; }
-    .shadow { fill: #3a3a3a; }
-    .disc { fill: var(--nc); }
-    .ring { fill: none; stroke: var(--text); stroke-width: 3; opacity: 0; transition: opacity 0.2s; }
-    .node:hover .ring, .node:focus-visible .ring { opacity: 0.55; }
-    .node.selected .ring { opacity: 1; }
+    .node:hover .hover,
+    .node:focus-visible .hover {
+      transform: scale(1.1) translateY(-2px);
+    }
+
+    .node:active .hover {
+      transform: scale(0.96);
+    }
+
+    .node.unlock .hover {
+      animation: unlock 0.6s cubic-bezier(.3, 1.5, .5, 1);
+    }
+
+    @keyframes unlock {
+      0% {
+        transform: scale(1);
+      }
+
+      40% {
+        transform: scale(1.25);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .hit {
+      fill: transparent;
+    }
+
+    .shadow {
+      fill: #3a3a3a;
+    }
+
+    .disc {
+      fill: var(--nc);
+    }
+
+    .ring {
+      fill: none;
+      stroke: var(--text);
+      stroke-width: 3;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .node:hover .ring,
+    .node:focus-visible .ring {
+      opacity: 0.55;
+    }
+
+    .node.selected .ring {
+      opacity: 1;
+    }
+
     .icon {
       fill: none;
       stroke: var(--ink);
@@ -171,6 +327,7 @@
       stroke-linecap: round;
       stroke-linejoin: round;
     }
+
     .badge {
       opacity: 0;
       transform-box: fill-box;
@@ -178,13 +335,49 @@
       transform: scale(0.3);
       transition: opacity 0.2s, transform 0.3s cubic-bezier(.3, 1.8, .5, 1);
     }
-    .node.visited .badge { opacity: 1; transform: scale(1); }
-    .badge circle { fill: var(--text); stroke: var(--bg); stroke-width: 3; }
-    .badge path { fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 
-    .nlabel { font-family: var(--font); font-weight: 600; font-size: 15px; fill: var(--body); text-anchor: middle; pointer-events: none; }
-    .nmeta { font-family: var(--font); font-weight: 400; font-size: 12.5px; fill: var(--muted); text-anchor: middle; pointer-events: none; }
-    .node.visited .nlabel, .node:hover .nlabel, .node.selected .nlabel { fill: var(--text); }
+    .node.visited .badge {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .badge circle {
+      fill: var(--text);
+      stroke: var(--bg);
+      stroke-width: 3;
+    }
+
+    .badge path {
+      fill: none;
+      stroke: var(--ink);
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .nlabel {
+      font-family: var(--font);
+      font-weight: 600;
+      font-size: 15px;
+      fill: var(--body);
+      text-anchor: middle;
+      pointer-events: none;
+    }
+
+    .nmeta {
+      font-family: var(--font);
+      font-weight: 400;
+      font-size: 12.5px;
+      fill: var(--muted);
+      text-anchor: middle;
+      pointer-events: none;
+    }
+
+    .node.visited .nlabel,
+    .node:hover .nlabel,
+    .node.selected .nlabel {
+      fill: var(--text);
+    }
 
     .starthint {
       font-family: var(--font);
@@ -195,20 +388,60 @@
       pointer-events: none;
       animation: bob 1.6s ease-in-out infinite;
     }
-    @keyframes bob { 50% { transform: translateY(-5px); } }
-    .app.started .starthint { display: none; }
 
-    .node.locked { cursor: not-allowed; }
-    .node.locked .disc { fill: none; stroke: #3a3a3a; stroke-width: 2; stroke-dasharray: 4 6; }
-    .node.locked .shadow { display: none; }
-    .node.locked .icon { stroke: #5a5a5a; }
-    .node.locked:hover .hover { transform: none; }
+    @keyframes bob {
+      50% {
+        transform: translateY(-5px);
+      }
+    }
 
-    .spark { transform-box: fill-box; transform-origin: center; animation: spark 0.8s cubic-bezier(.2, .7, .3, 1) forwards; }
+    .app.started .starthint {
+      display: none;
+    }
+
+    .node.locked {
+      cursor: not-allowed;
+    }
+
+    .node.locked .disc {
+      fill: none;
+      stroke: #3a3a3a;
+      stroke-width: 2;
+      stroke-dasharray: 4 6;
+    }
+
+    .node.locked .shadow {
+      display: none;
+    }
+
+    .node.locked .icon {
+      stroke: #5a5a5a;
+    }
+
+    .node.locked:hover .hover {
+      transform: none;
+    }
+
+    .spark {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: spark 0.8s cubic-bezier(.2, .7, .3, 1) forwards;
+    }
+
     @keyframes spark {
-      0% { transform: translate(0, 0) rotate(0) scale(0.4); opacity: 1; }
-      70% { opacity: 1; }
-      100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(1); opacity: 0; }
+      0% {
+        transform: translate(0, 0) rotate(0) scale(0.4);
+        opacity: 1;
+      }
+
+      70% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(1);
+        opacity: 0;
+      }
     }
 
     /* ---------- FOOTER ---------- */
@@ -225,10 +458,33 @@
       font-size: 0.82rem;
       color: var(--muted);
     }
-    .hints b { color: var(--text); font-weight: 600; }
-    .right { display: flex; align-items: center; gap: 18px; }
-    .reset { font: inherit; color: var(--muted); background: none; border: 0; cursor: pointer; padding: 4px 0; white-space: nowrap; }
-    .reset:hover { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+
+    .hints b {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .right {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .reset {
+      font: inherit;
+      color: var(--muted);
+      background: none;
+      border: 0;
+      cursor: pointer;
+      padding: 4px 0;
+      white-space: nowrap;
+    }
+
+    .reset:hover {
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
 
     /* ---------- SIDE PANEL ---------- */
     .panel {
@@ -245,40 +501,140 @@
       visibility: hidden;
       transition: transform 0.35s cubic-bezier(.2, .8, .2, 1), visibility 0s 0.35s;
     }
+
     .panel.open {
       transform: none;
       visibility: visible;
       transition: transform 0.35s cubic-bezier(.2, .8, .2, 1), visibility 0s 0s;
     }
-    .panel-top { background: var(--nc, var(--text)); color: var(--ink); padding: 22px 32px 30px; }
-    .panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
-    .tag { font-size: 0.8rem; font-weight: 600; padding: 4px 12px; border-radius: 999px; background: rgba(0, 0, 0, 0.12); }
+
+    .panel-top {
+      background: var(--nc, var(--text));
+      color: var(--ink);
+      padding: 22px 32px 30px;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .tag {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.12);
+    }
+
     .close {
       background: none;
       border: 2px solid rgba(0, 0, 0, 0.45);
       color: var(--ink);
-      width: 34px; height: 34px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       cursor: pointer;
       font-size: 0.85rem;
       line-height: 1;
       font-weight: 700;
     }
-    .close:hover { background: var(--ink); color: var(--nc, var(--text)); border-color: var(--ink); }
-    .panel h2 { font-weight: 700; font-size: clamp(1.9rem, 3.8vw, 2.5rem); line-height: 1.1; letter-spacing: -0.02em; margin: 0; }
-    .sub { margin: 8px 0 0; font-size: 1rem; font-weight: 500; opacity: 0.75; }
-    .panel-inner { padding: 28px 32px 44px; }
-    .media img { width: 100%; display: block; border-radius: 12px; border: 1px solid var(--line); margin-bottom: 24px; }
-    .body p, .body ul { color: var(--body); line-height: 1.7; margin: 0 0 1em; font-size: 0.98rem; }
-    .body ul { padding-left: 1.2em; }
-    .body h3 { font-size: 1rem; font-weight: 600; color: var(--nc, var(--text)); margin: 1.6em 0 0.35em; }
-    .facts { margin: 26px 0 0; border-top: 1px solid var(--line); }
-    .facts div { display: flex; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 0.93rem; }
-    .facts dt { width: 100px; flex-shrink: 0; color: var(--muted); }
-    .facts dd { margin: 0; color: var(--body); font-weight: 500; }
-    .facts dd a { color: var(--nc, var(--text)); text-underline-offset: 3px; }
-    .facts dd a:hover { text-decoration: none; }
-    .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+
+    .close:hover {
+      background: var(--ink);
+      color: var(--nc, var(--text));
+      border-color: var(--ink);
+    }
+
+    .panel h2 {
+      font-weight: 700;
+      font-size: clamp(1.9rem, 3.8vw, 2.5rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    .sub {
+      margin: 8px 0 0;
+      font-size: 1rem;
+      font-weight: 500;
+      opacity: 0.75;
+    }
+
+    .panel-inner {
+      padding: 28px 32px 44px;
+    }
+
+    .media img {
+      width: 100%;
+      display: block;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      margin-bottom: 24px;
+    }
+
+    .body p,
+    .body ul {
+      color: var(--body);
+      line-height: 1.7;
+      margin: 0 0 1em;
+      font-size: 0.98rem;
+    }
+
+    .body ul {
+      padding-left: 1.2em;
+    }
+
+    .body h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--nc, var(--text));
+      margin: 1.6em 0 0.35em;
+    }
+
+    .facts {
+      margin: 26px 0 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .facts div {
+      display: flex;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.93rem;
+    }
+
+    .facts dt {
+      width: 100px;
+      flex-shrink: 0;
+      color: var(--muted);
+    }
+
+    .facts dd {
+      margin: 0;
+      color: var(--body);
+      font-weight: 500;
+    }
+
+    .facts dd a {
+      color: var(--nc, var(--text));
+      text-underline-offset: 3px;
+    }
+
+    .facts dd a:hover {
+      text-decoration: none;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
     .links a {
       font-size: 0.9rem;
       font-weight: 600;
@@ -289,32 +645,123 @@
       text-decoration: none;
       transition: transform 0.12s, border-color 0.2s;
     }
-    .links a:first-child { background: var(--nc, var(--text)); border-color: var(--nc, var(--text)); color: var(--ink); box-shadow: 0 3px 0 #6b6b6b; }
-    .links a:hover { transform: translateY(-1px); border-color: var(--nc, var(--text)); }
-    .links a:active { transform: translateY(2px); }
 
-    .pager { display: flex; justify-content: space-between; gap: 12px; margin-top: 38px; padding-top: 20px; border-top: 1px solid var(--line); }
-    .pg { font: inherit; color: var(--text); background: none; border: 0; padding: 4px 0; cursor: pointer; text-align: left; min-width: 0; max-width: 48%; }
-    .pg[hidden] { display: block; visibility: hidden; }
-    .pg.next { text-align: right; margin-left: auto; }
-    .pg small { display: block; font-size: 0.76rem; color: var(--muted); }
-    .pg span { font-size: 0.93rem; font-weight: 600; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .pg:hover span { color: var(--nc, var(--accent)); }
+    .links a:first-child {
+      background: var(--nc, var(--text));
+      border-color: var(--nc, var(--text));
+      color: var(--ink);
+      box-shadow: 0 3px 0 #6b6b6b;
+    }
 
-    .scrim { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); z-index: 15; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    .links a:hover {
+      transform: translateY(-1px);
+      border-color: var(--nc, var(--text));
+    }
+
+    .links a:active {
+      transform: translateY(2px);
+    }
+
+    .pager {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 38px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .pg {
+      font: inherit;
+      color: var(--text);
+      background: none;
+      border: 0;
+      padding: 4px 0;
+      cursor: pointer;
+      text-align: left;
+      min-width: 0;
+      max-width: 48%;
+    }
+
+    .pg[hidden] {
+      display: block;
+      visibility: hidden;
+    }
+
+    .pg.next {
+      text-align: right;
+      margin-left: auto;
+    }
+
+    .pg small {
+      display: block;
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    .pg span {
+      font-size: 0.93rem;
+      font-weight: 600;
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .pg:hover span {
+      color: var(--nc, var(--accent));
+    }
+
+    .scrim {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 15;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
 
     @media (min-width: 861px) {
-      .app.panel-open .tree-wrap { padding-right: 460px; }
+      .app.panel-open .tree-wrap {
+        padding-right: 460px;
+      }
     }
 
     @media (max-width: 860px) {
-      .hud { grid-template-columns: 1fr auto; padding: 12px 16px; }
-      .tabs { grid-column: 1 / -1; grid-row: 2; justify-self: stretch; }
-      .tab { flex: 1; text-align: center; padding: 9px 8px; }
-      .pname { font-size: 1.2rem; }
-      .cta { padding: 9px 16px; }
-      .hints { padding: 10px 16px; }
-      .hints .tip { display: none; }
+      .hud {
+        grid-template-columns: 1fr auto;
+        padding: 12px 16px;
+      }
+
+      .tabs {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        justify-self: stretch;
+      }
+
+      .tab {
+        flex: 1;
+        text-align: center;
+        padding: 9px 8px;
+      }
+
+      .pname {
+        font-size: 1.2rem;
+      }
+
+      .cta {
+        padding: 9px 16px;
+      }
+
+      .hints {
+        padding: 10px 16px;
+      }
+
+      .hints .tip {
+        display: none;
+      }
+
       .panel {
         top: auto;
         left: 0;
@@ -324,21 +771,57 @@
         border-radius: 18px 18px 0 0;
         transform: translateY(100%);
       }
-      .panel-top { padding: 18px 20px 22px; }
-      .panel-inner { padding: 22px 20px 40px; }
-      .panel.open { transform: none; }
-      .app.panel-open .scrim { opacity: 1; pointer-events: auto; }
+
+      .panel-top {
+        padding: 18px 20px 22px;
+      }
+
+      .panel-inner {
+        padding: 22px 20px 40px;
+      }
+
+      .panel.open {
+        transform: none;
+      }
+
+      .app.panel-open .scrim {
+        opacity: 1;
+        pointer-events: auto;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .branch.draw { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; }
-      .branch.ghost { animation: none; opacity: 1; }
-      .node .appear { animation: none; opacity: 1; }
-      .node .float, .starthint, .node.unlock .hover { animation: none; }
-      .panel, .panel.open, .tree-wrap { transition: none; }
+      .branch.draw {
+        animation: none;
+        stroke-dasharray: none;
+        stroke-dashoffset: 0;
+      }
+
+      .branch.ghost {
+        animation: none;
+        opacity: 1;
+      }
+
+      .node .appear {
+        animation: none;
+        opacity: 1;
+      }
+
+      .node .float,
+      .starthint,
+      .node.unlock .hover {
+        animation: none;
+      }
+
+      .panel,
+      .panel.open,
+      .tree-wrap {
+        transition: none;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <div class="app" id="app">
@@ -398,8 +881,12 @@
 
   </div>
 
-  <noscript><p style="position:fixed;top:120px;left:0;right:0;text-align:center;color:#8c8c8c">This portfolio needs JavaScript turned on to show the skill trees.</p></noscript>
+  <noscript>
+    <p style="position:fixed;top:120px;left:0;right:0;text-align:center;color:#8c8c8c">This portfolio needs JavaScript
+      turned on to show the skill trees.</p>
+  </noscript>
 
+  <script src="src/helpers.js"></script>
   <script>
     /* =====================================================================
        EDIT YOUR CONTENT HERE
@@ -592,18 +1079,13 @@
       if (parent) parent.appendChild(e);
       return e;
     }
-    // small stable "random" number from a string, so the layout looks hand-grown but never changes
-    function hash(s) {
-      let h = 2166136261;
-      for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
-      return (h >>> 0) / 4294967295;
-    }
+
     const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // ----- saved progress -----
     let visited = new Set();
-    try { visited = new Set(JSON.parse(localStorage.getItem(STORE_KEY) || '[]')); } catch (e) {}
-    const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify([...visited])); } catch (e) {} };
+    try { visited = new Set(JSON.parse(localStorage.getItem(STORE_KEY) || '[]')); } catch (e) { }
+    const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify([...visited])); } catch (e) { } };
 
     // ----- state -----
     const keys = Object.keys(TREES);
@@ -621,17 +1103,6 @@
       im.src = CONFIG.avatar; im.alt = CONFIG.name;
       $('avatar').appendChild(im);
       $('avatar').hidden = false;
-    }
-
-    function wrapLabel(text, max) {
-      const lines = [];
-      let cur = '';
-      text.split(' ').forEach(w => {
-        if (cur && (cur + ' ' + w).length > max) { lines.push(cur); cur = w; }
-        else cur = cur ? cur + ' ' + w : w;
-      });
-      if (cur) lines.push(cur);
-      return lines;
     }
 
     /* ---------------------------------------------------------------------
@@ -705,16 +1176,6 @@
         pos[nd.id] = { x, y, s: nd.locked ? 50 : (isRoot ? 92 : 72) };
       });
       return { pos, dep, parentsOf, rootId };
-    }
-
-    // curved branch from a parent to a child
-    function branchPath(P, C, parentIsRoot) {
-      const unit = (x, y) => { const m = Math.hypot(x, y) || 1; return [x / m, y / m]; };
-      const dist = Math.hypot(C.x - P.x, C.y - P.y);
-      const dC = unit(C.x, C.y);
-      const dP = parentIsRoot ? unit(C.x - P.x, C.y - P.y) : unit(P.x, P.y);
-      const k = dist * 0.42;
-      return `M${P.x} ${P.y} C${P.x + dP[0] * k} ${P.y + dP[1] * k}, ${C.x - dC[0] * k} ${C.y - dC[1] * k}, ${C.x} ${C.y}`;
     }
 
     // ----- draw the current tree -----
@@ -847,8 +1308,8 @@
         const dist = p.s * 0.85 + hash(id + 'd' + i) * 46;
         const fill = i % 2 ? nodeColors[id] : '#8c8c8c';
         const shape = i % 3 === 0 ? el('rect', { x: -4, y: -4, width: 8, height: 8, rx: 1.5 }, g)
-                    : i % 3 === 1 ? el('circle', { r: 4.5 }, g)
-                    : el('path', { d: 'M0 -6 L6 5 L-6 5 Z' }, g);
+          : i % 3 === 1 ? el('circle', { r: 4.5 }, g)
+            : el('path', { d: 'M0 -6 L6 5 L-6 5 Z' }, g);
         shape.setAttribute('class', 'spark');
         shape.setAttribute('fill', fill);
         shape.style.setProperty('--dx', (Math.cos(a) * dist).toFixed(1) + 'px');
@@ -887,7 +1348,7 @@
         b.setAttribute('aria-selected', key === k ? 'true' : 'false');
         b.tabIndex = key === k ? 0 : -1;
       });
-      try { history.replaceState(null, '', '#' + k); } catch (e) {}
+      try { history.replaceState(null, '', '#' + k); } catch (e) { }
       render();
     }
 
@@ -934,7 +1395,7 @@
         setTimeout(() => nodeEls[id] && nodeEls[id].classList.remove('unlock'), 700);
         burst(id);
       }
-      try { history.replaceState(null, '', '#' + current + '/' + id); } catch (e) {}
+      try { history.replaceState(null, '', '#' + current + '/' + id); } catch (e) { }
 
       app.classList.add('panel-open');
       panel.classList.add('open');
@@ -951,7 +1412,7 @@
       panel.classList.remove('open');
       panel.setAttribute('aria-hidden', 'true');
       refresh();
-      try { history.replaceState(null, '', '#' + current); } catch (e) {}
+      try { history.replaceState(null, '', '#' + current); } catch (e) { }
       if (!skipFocus && back) back.focus({ preventScroll: true });
     }
 
@@ -991,4 +1452,5 @@
     if (TREES[start[0]] && start[1]) openNode(start[1]);
   </script>
 </body>
+
 </html>

@@ -4,19 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bradley Curtis | Game Developer</title>
-  <meta name="description" content="Portfolio of Bradley Curtis, game developer. Explore the skill tree.">
+  <meta name="description" content="Portfolio of Bradley Curtis, game developer. Explore the skill trees to see my projects and experience.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #07080c;
-      --panel: #0d0f16;
-      --line: #222633;
-      --text: #e9ebf1;
-      --muted: #8d93a5;
+      --bg: #000000;
+      --bar: #0a0a0a;
+      --surface: #0e0e0e;
+      --line: #262626;
+      --branch: #2e2e2e;
+      --text: #f5f5f5;
+      --body: #d4d4d4;
+      --muted: #8c8c8c;
+      --ink: #000000;
+      --accent: #ffffff;
+      --font: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
     }
 
     * { box-sizing: border-box; }
@@ -25,216 +31,213 @@
       margin: 0;
       background: var(--bg);
       color: var(--text);
-      font-family: 'Barlow', system-ui, sans-serif;
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
       overflow: hidden;
     }
+    button { font-family: inherit; }
 
     .app {
+      position: relative;
       height: 100vh;
       height: 100dvh;
       display: grid;
       grid-template-rows: auto 1fr auto;
-      background: radial-gradient(ellipse 60% 55% at 50% 45%, #12151f 0%, var(--bg) 75%);
-      position: relative;
       overflow: hidden;
+      background: var(--bg);
     }
 
-    /* ---------- TOP BAR ---------- */
-    .bar {
-      display: flex;
-      justify-content: space-between;
+    /* ---------- HEADER ---------- */
+    .hud {
+      position: relative;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      padding: 18px 28px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      gap: 12px 24px;
+      padding: 16px 32px;
+      background: var(--bar);
+      border-bottom: 1px solid var(--line);
     }
-    .brand { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
-    .brand-name {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 700;
-      font-size: 1.35rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
+    .player { display: flex; align-items: center; gap: 14px; min-width: 0; }
+    .avatar {
+      width: 46px; height: 46px;
+      flex: none;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid var(--accent);
     }
-    .brand-role {
+    .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .avatar[hidden] { display: none; }
+    .pname { margin: 0; font-weight: 700; font-size: 1.45rem; line-height: 1.1; letter-spacing: -0.01em; white-space: nowrap; }
+    .pclass { font-size: 0.85rem; font-weight: 500; color: var(--muted); }
+
+    .tabs { display: flex; gap: 6px; justify-self: center; }
+    .tab {
+      font-weight: 600;
+      font-size: 0.95rem;
       color: var(--muted);
-      font-size: 0.85rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+      background: none;
+      border: 0;
+      padding: 9px 20px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s, transform 0.15s;
     }
-    .progress { display: flex; align-items: baseline; gap: 12px; }
-    .progress-label {
-      color: var(--muted);
-      font-size: 0.75rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
+    .tab:hover { color: var(--text); }
+    .tab[aria-selected="true"] { background: var(--text); color: var(--ink); box-shadow: 0 3px 0 #6b6b6b; }
+    .tab:active { transform: translateY(1px); }
+    .tab:focus-visible, .cta:focus-visible, .reset:focus-visible, .pg:focus-visible, .close:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
     }
-    .progress-count {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 700;
-      font-size: 1.4rem;
+
+    .hud-right { display: flex; justify-content: flex-end; }
+    .cta {
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--ink);
+      background: var(--accent);
+      border: 0;
+      padding: 10px 22px;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #6b6b6b;
+      transition: transform 0.12s, box-shadow 0.12s;
     }
+    .cta:hover { transform: translateY(-1px); box-shadow: 0 5px 0 #6b6b6b; }
+    .cta:active { transform: translateY(3px); box-shadow: 0 1px 0 #6b6b6b; }
 
     /* ---------- TREE ---------- */
     .tree-wrap {
+      position: relative;
       min-height: 0;
       overflow: auto;
+      display: flex;
       transition: padding-right 0.35s cubic-bezier(.2, .8, .2, 1);
     }
-    #tree { display: block; width: 100%; height: 100%; min-width: 760px; }
+    #tree { margin: auto; flex: none; display: block; overflow: visible; }
 
-    .edge {
+    .branch {
       fill: none;
-      stroke: var(--c);
-      stroke-width: 3;
-      opacity: 0.38;
-      transition: opacity 0.4s;
+      stroke: var(--branch);
+      stroke-linecap: round;
+      transition: stroke 0.4s;
     }
-    .edge.lit { opacity: 1; }
-    .edge.draw {
+    .branch.lit { stroke: var(--bc); }
+    .branch.draw {
       stroke-dasharray: 1;
       stroke-dashoffset: 1;
-      animation: draw 0.8s ease-out forwards;
+      animation: draw 0.9s cubic-bezier(.3, .7, .3, 1) forwards;
       animation-delay: var(--ed);
     }
-    .edge.locked {
-      stroke: #272c39;
-      stroke-width: 2.5;
-      stroke-dasharray: 2 7;
-      stroke-linecap: round;
+    .branch.ghost {
+      stroke-dasharray: 2 9;
       opacity: 0;
       animation: fade 0.6s ease forwards;
       animation-delay: var(--ed);
     }
-    .edgeglow {
-      fill: none;
-      stroke: var(--c);
-      stroke-width: 9;
-      opacity: 0;
-      transition: opacity 0.4s;
-    }
-    .edgeglow.lit { opacity: 0.5; }
-
     @keyframes draw { to { stroke-dashoffset: 0; } }
     @keyframes fade { to { opacity: 1; } }
 
-    .node {
-      outline: none;
-      cursor: pointer;
+    .node { outline: none; cursor: pointer; }
+    .node .appear {
       opacity: 0;
-      animation: fade 0.5s ease forwards;
+      animation: fade 0.3s ease forwards;
       animation-delay: var(--nd);
     }
-    .node .inner {
+    .node .float { animation: float var(--fd, 5s) ease-in-out infinite; animation-delay: var(--fdl, 0s); }
+    @keyframes float { 50% { transform: translateY(-4px); } }
+    .node .hover {
       transform-box: fill-box;
       transform-origin: center;
-      transition: transform 0.2s;
+      transition: transform 0.22s cubic-bezier(.3, 1.6, .5, 1);
     }
-    .node:hover .inner, .node:focus-visible .inner { transform: scale(1.08); }
+    .node:hover .hover, .node:focus-visible .hover { transform: scale(1.1) translateY(-2px); }
+    .node:active .hover { transform: scale(0.96); }
+    .node.unlock .hover { animation: unlock 0.6s cubic-bezier(.3, 1.5, .5, 1); }
+    @keyframes unlock { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
 
-    .glow { opacity: 0.35; transition: opacity 0.2s; }
-    .node:hover .glow, .node:focus-visible .glow, .node.visited .glow { opacity: 0.85; }
-
-    .disc { fill: #0b0d13; stroke: var(--c); stroke-width: 2.5; transition: fill 0.25s; }
+    .hit { fill: transparent; }
+    .shadow { fill: #3a3a3a; }
+    .disc { fill: var(--nc); }
+    .ring { fill: none; stroke: var(--text); stroke-width: 3; opacity: 0; transition: opacity 0.2s; }
+    .node:hover .ring, .node:focus-visible .ring { opacity: 0.55; }
+    .node.selected .ring { opacity: 1; }
     .icon {
       fill: none;
-      stroke: var(--c);
-      stroke-width: 1.8;
+      stroke: var(--ink);
+      stroke-width: 1.9;
       stroke-linecap: round;
       stroke-linejoin: round;
-      transition: stroke 0.25s;
     }
-    .node.visited .disc { fill: var(--c); }
-    .node.visited .icon { stroke: #07080c; }
-    .node.selected .disc, .node:focus-visible .disc { stroke: #fff; stroke-width: 3.2; }
-
-    .pill rect { fill: #07080c; stroke: var(--c); stroke-width: 1.3; }
-    .pill text {
-      fill: var(--c);
-      font-size: 11.5px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      text-anchor: middle;
-      dominant-baseline: central;
-    }
-    .node.visited .pill text { fill: var(--text); }
-
-    .pulse {
-      fill: none;
-      stroke: var(--c);
-      stroke-width: 2;
+    .badge {
       opacity: 0;
       transform-box: fill-box;
       transform-origin: center;
-      animation: pulse 2.2s ease-out infinite;
-      animation-delay: 2.4s;
+      transform: scale(0.3);
+      transition: opacity 0.2s, transform 0.3s cubic-bezier(.3, 1.8, .5, 1);
+    }
+    .node.visited .badge { opacity: 1; transform: scale(1); }
+    .badge circle { fill: var(--text); stroke: var(--bg); stroke-width: 3; }
+    .badge path { fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+
+    .nlabel { font-family: var(--font); font-weight: 600; font-size: 15px; fill: var(--body); text-anchor: middle; pointer-events: none; }
+    .nmeta { font-family: var(--font); font-weight: 400; font-size: 12.5px; fill: var(--muted); text-anchor: middle; pointer-events: none; }
+    .node.visited .nlabel, .node:hover .nlabel, .node.selected .nlabel { fill: var(--text); }
+
+    .starthint {
+      font-family: var(--font);
+      font-weight: 600;
+      font-size: 13px;
+      fill: var(--accent);
+      text-anchor: middle;
       pointer-events: none;
+      animation: bob 1.6s ease-in-out infinite;
     }
-    body.started .pulse { display: none; }
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 0.7; }
-      100% { transform: scale(1.55); opacity: 0; }
-    }
+    @keyframes bob { 50% { transform: translateY(-5px); } }
+    .app.started .starthint { display: none; }
 
     .node.locked { cursor: not-allowed; }
-    .node.locked .disc { stroke: #2b303d; stroke-width: 2; }
-    .node.locked .icon { stroke: #3a4050; }
-    .node.locked:hover .inner { transform: none; }
+    .node.locked .disc { fill: none; stroke: #3a3a3a; stroke-width: 2; stroke-dasharray: 4 6; }
+    .node.locked .shadow { display: none; }
+    .node.locked .icon { stroke: #5a5a5a; }
+    .node.locked:hover .hover { transform: none; }
 
-    .count-label {
-      fill: var(--c);
-      font-size: 12.5px;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-    .count-num {
-      fill: var(--c);
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 700;
-      font-size: 40px;
+    .spark { transform-box: fill-box; transform-origin: center; animation: spark 0.8s cubic-bezier(.2, .7, .3, 1) forwards; }
+    @keyframes spark {
+      0% { transform: translate(0, 0) rotate(0) scale(0.4); opacity: 1; }
+      70% { opacity: 1; }
+      100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(1); opacity: 0; }
     }
 
-    /* ---------- BOTTOM HINTS ---------- */
+    /* ---------- FOOTER ---------- */
     .hints {
+      position: relative;
+      z-index: 5;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 14px 28px;
-      font-size: 0.85rem;
-      color: var(--muted);
-      border-top: 1px solid rgba(255, 255, 255, 0.04);
       gap: 16px;
-    }
-    .hints span.group { display: inline-flex; align-items: center; margin-right: 22px; }
-    .key {
-      display: inline-block;
-      padding: 3px 9px;
-      margin-right: 9px;
-      border: 1px solid #3a3f50;
-      border-radius: 6px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      color: #cfd3de;
-    }
-    .reset {
-      background: none;
-      border: 0;
+      padding: 11px 32px;
+      background: var(--bar);
+      border-top: 1px solid var(--line);
+      font-size: 0.82rem;
       color: var(--muted);
-      font: inherit;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
     }
-    .reset:hover { color: var(--text); }
+    .hints b { color: var(--text); font-weight: 600; }
+    .right { display: flex; align-items: center; gap: 18px; }
+    .reset { font: inherit; color: var(--muted); background: none; border: 0; cursor: pointer; padding: 4px 0; white-space: nowrap; }
+    .reset:hover { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
 
     /* ---------- SIDE PANEL ---------- */
     .panel {
       position: fixed;
-      top: 0; right: 0; bottom: 0;
-      width: min(440px, 100%);
-      background: var(--panel);
+      top: var(--bar-h, 0px);
+      right: 0;
+      bottom: 0;
+      width: min(460px, 100%);
+      background: var(--surface);
       border-left: 1px solid var(--line);
       overflow-y: auto;
       z-index: 20;
@@ -247,124 +250,91 @@
       visibility: visible;
       transition: transform 0.35s cubic-bezier(.2, .8, .2, 1), visibility 0s 0s;
     }
-    .panel::before {
-      content: "";
-      display: block;
-      height: 4px;
-      background: var(--c);
-      position: sticky;
-      top: 0;
-    }
-    .panel-inner { padding: 26px 30px 48px; }
-    .panel-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 22px;
-    }
-    .tag {
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--c);
-    }
+    .panel-top { background: var(--nc, var(--text)); color: var(--ink); padding: 22px 32px 30px; }
+    .panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+    .tag { font-size: 0.8rem; font-weight: 600; padding: 4px 12px; border-radius: 999px; background: rgba(0, 0, 0, 0.12); }
     .close {
       background: none;
-      border: 1px solid var(--line);
-      color: var(--muted);
+      border: 2px solid rgba(0, 0, 0, 0.45);
+      color: var(--ink);
       width: 34px; height: 34px;
-      border-radius: 8px;
+      border-radius: 50%;
       cursor: pointer;
-      font-size: 1rem;
-      line-height: 1;
-    }
-    .close:hover { color: var(--text); border-color: #454b5e; }
-
-    .panel h2 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 700;
-      font-size: clamp(2.3rem, 5vw, 3.1rem);
-      line-height: 1;
-      text-transform: uppercase;
-      margin: 0 0 10px;
-    }
-    .sub { color: var(--muted); margin: 0 0 26px; font-size: 1.02rem; }
-    .media img {
-      width: 100%;
-      display: block;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      margin-bottom: 24px;
-    }
-    .body p, .body ul { color: #c6cad6; line-height: 1.65; margin: 0 0 1em; font-size: 1.04rem; }
-    .body ul { padding-left: 1.2em; }
-    .body h3 {
       font-size: 0.85rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--c);
-      margin: 1.8em 0 0.6em;
+      line-height: 1;
+      font-weight: 700;
     }
-    .facts { margin: 28px 0 0; border-top: 1px solid var(--line); }
-    .facts div {
-      display: flex;
-      gap: 16px;
-      padding: 11px 0;
-      border-bottom: 1px solid var(--line);
-      font-size: 0.95rem;
-    }
+    .close:hover { background: var(--ink); color: var(--nc, var(--text)); border-color: var(--ink); }
+    .panel h2 { font-weight: 700; font-size: clamp(1.9rem, 3.8vw, 2.5rem); line-height: 1.1; letter-spacing: -0.02em; margin: 0; }
+    .sub { margin: 8px 0 0; font-size: 1rem; font-weight: 500; opacity: 0.75; }
+    .panel-inner { padding: 28px 32px 44px; }
+    .media img { width: 100%; display: block; border-radius: 12px; border: 1px solid var(--line); margin-bottom: 24px; }
+    .body p, .body ul { color: var(--body); line-height: 1.7; margin: 0 0 1em; font-size: 0.98rem; }
+    .body ul { padding-left: 1.2em; }
+    .body h3 { font-size: 1rem; font-weight: 600; color: var(--nc, var(--text)); margin: 1.6em 0 0.35em; }
+    .facts { margin: 26px 0 0; border-top: 1px solid var(--line); }
+    .facts div { display: flex; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 0.93rem; }
     .facts dt { width: 100px; flex-shrink: 0; color: var(--muted); }
-    .facts dd { margin: 0; }
-    .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+    .facts dd { margin: 0; color: var(--body); font-weight: 500; }
+    .facts dd a { color: var(--nc, var(--text)); text-underline-offset: 3px; }
+    .facts dd a:hover { text-decoration: none; }
+    .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
     .links a {
-      border: 1px solid var(--c);
-      color: var(--c);
-      padding: 9px 18px;
-      border-radius: 8px;
-      text-decoration: none;
+      font-size: 0.9rem;
       font-weight: 600;
-      font-size: 0.92rem;
-      transition: background 0.2s, color 0.2s;
+      color: var(--text);
+      border: 2px solid #3a3a3a;
+      padding: 9px 18px;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: transform 0.12s, border-color 0.2s;
     }
-    .links a:hover { background: var(--c); color: #07080c; }
+    .links a:first-child { background: var(--nc, var(--text)); border-color: var(--nc, var(--text)); color: var(--ink); box-shadow: 0 3px 0 #6b6b6b; }
+    .links a:hover { transform: translateY(-1px); border-color: var(--nc, var(--text)); }
+    .links a:active { transform: translateY(2px); }
 
-    .scrim {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.55);
-      z-index: 15;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-    }
+    .pager { display: flex; justify-content: space-between; gap: 12px; margin-top: 38px; padding-top: 20px; border-top: 1px solid var(--line); }
+    .pg { font: inherit; color: var(--text); background: none; border: 0; padding: 4px 0; cursor: pointer; text-align: left; min-width: 0; max-width: 48%; }
+    .pg[hidden] { display: block; visibility: hidden; }
+    .pg.next { text-align: right; margin-left: auto; }
+    .pg small { display: block; font-size: 0.76rem; color: var(--muted); }
+    .pg span { font-size: 0.93rem; font-weight: 600; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pg:hover span { color: var(--nc, var(--accent)); }
+
+    .scrim { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); z-index: 15; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
 
     @media (min-width: 861px) {
-      .app.panel-open .tree-wrap { padding-right: 440px; }
+      .app.panel-open .tree-wrap { padding-right: 460px; }
     }
 
     @media (max-width: 860px) {
-      .bar, .hints { padding-left: 16px; padding-right: 16px; }
-      .progress-label { display: none; }
-      .hints .desktop-only { display: none; }
+      .hud { grid-template-columns: 1fr auto; padding: 12px 16px; }
+      .tabs { grid-column: 1 / -1; grid-row: 2; justify-self: stretch; }
+      .tab { flex: 1; text-align: center; padding: 9px 8px; }
+      .pname { font-size: 1.2rem; }
+      .cta { padding: 9px 16px; }
+      .hints { padding: 10px 16px; }
+      .hints .tip { display: none; }
       .panel {
         top: auto;
         left: 0;
         width: 100%;
-        height: min(74vh, 660px);
+        height: min(78vh, 700px);
         border-left: 0;
-        border-top: 1px solid var(--line);
-        border-radius: 16px 16px 0 0;
+        border-radius: 18px 18px 0 0;
         transform: translateY(100%);
       }
+      .panel-top { padding: 18px 20px 22px; }
+      .panel-inner { padding: 22px 20px 40px; }
       .panel.open { transform: none; }
       .app.panel-open .scrim { opacity: 1; pointer-events: auto; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .edge.draw { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; }
-      .edge.locked, .node { animation: none; opacity: 1; }
-      .pulse { display: none; }
+      .branch.draw { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; }
+      .branch.ghost { animation: none; opacity: 1; }
+      .node .appear { animation: none; opacity: 1; }
+      .node .float, .starthint, .node.unlock .hover { animation: none; }
       .panel, .panel.open, .tree-wrap { transition: none; }
     }
   </style>
@@ -373,202 +343,227 @@
 
   <div class="app" id="app">
 
-    <header class="bar">
-      <div class="brand">
-        <span class="brand-name">Bradley Curtis</span>
-        <span class="brand-role">Game Developer</span>
+    <header class="hud" id="hud">
+      <div class="player">
+        <div class="avatar" id="avatar" hidden></div>
+        <div>
+          <h1 class="pname" id="pname">Bradley Curtis</h1>
+          <div class="pclass" id="pclass">Game developer</div>
+        </div>
       </div>
-      <div class="progress">
-        <span class="progress-label">Nodes unlocked</span>
-        <span class="progress-count" id="count">0/8</span>
+
+      <div class="tabs" id="tabs" role="tablist" aria-label="Portfolio sections"></div>
+
+      <div class="hud-right">
+        <button class="cta" id="cta" type="button">Contact</button>
       </div>
     </header>
 
     <main class="tree-wrap" id="treeWrap">
-      <svg id="tree" viewBox="40 100 920 680" role="group" aria-label="Portfolio skill tree">
-        <defs>
-          <radialGradient id="g-about">
-            <stop offset="0" stop-color="#35e08a" stop-opacity="0.45"/>
-            <stop offset="1" stop-color="#35e08a" stop-opacity="0"/>
-          </radialGradient>
-          <radialGradient id="g-games">
-            <stop offset="0" stop-color="#ffc233" stop-opacity="0.45"/>
-            <stop offset="1" stop-color="#ffc233" stop-opacity="0"/>
-          </radialGradient>
-          <filter id="blur" filterUnits="userSpaceOnUse" x="0" y="50" width="1000" height="800">
-            <feGaussianBlur stdDeviation="5"/>
-          </filter>
-        </defs>
-        <g id="glowLayer" filter="url(#blur)"></g>
-        <g id="edgeLayer"></g>
-        <g id="nodeLayer"></g>
-        <g id="labelLayer"></g>
+      <svg id="tree" role="group" aria-label="Skill tree">
+        <g id="scene"></g>
       </svg>
     </main>
 
     <footer class="hints">
-      <div>
-        <span class="group"><span class="key">CLICK</span>a node to unlock it</span>
-        <span class="group desktop-only"><span class="key">ESC</span>close panel</span>
+      <span class="tip">Click a node to unlock it.</span>
+      <div class="right">
+        <span><b id="count">0 of 0</b> unlocked</span>
+        <button class="reset" id="reset" type="button">Reset</button>
       </div>
-      <button class="reset" id="reset"><span class="key">R</span>Reset skill tree</button>
     </footer>
 
     <div class="scrim" id="scrim"></div>
 
     <aside class="panel" id="panel" role="dialog" aria-labelledby="panelTitle" aria-hidden="true">
-      <div class="panel-inner">
+      <div class="panel-top">
         <div class="panel-head">
           <span class="tag" id="pTag"></span>
-          <button class="close" id="close" aria-label="Close panel">&#10005;</button>
+          <button class="close" id="close" type="button" aria-label="Close panel">&#10005;</button>
         </div>
         <h2 id="panelTitle"></h2>
         <p class="sub" id="pSub"></p>
+      </div>
+      <div class="panel-inner">
         <div class="media" id="pMedia"></div>
         <div class="body" id="pBody"></div>
         <dl class="facts" id="pFacts"></dl>
         <div class="links" id="pLinks"></div>
+        <div class="pager">
+          <button class="pg prev" id="pgPrev" type="button"></button>
+          <button class="pg next" id="pgNext" type="button"></button>
+        </div>
       </div>
     </aside>
 
   </div>
 
-  <noscript><p style="position:fixed;top:80px;left:0;right:0;text-align:center;color:#8d93a5">This portfolio needs JavaScript turned on to show the skill tree.</p></noscript>
+  <noscript><p style="position:fixed;top:120px;left:0;right:0;text-align:center;color:#8c8c8c">This portfolio needs JavaScript turned on to show the skill trees.</p></noscript>
 
   <script>
     /* =====================================================================
        EDIT YOUR CONTENT HERE
-       Each node below opens the side panel when clicked. For each one change:
-         label     short text on the node's tag
+       ===================================================================== */
+
+    /* The header and colours */
+    const CONFIG = {
+      name: 'Bradley Curtis',
+      role: 'Game developer',
+      avatar: '',                       // optional photo, e.g. 'images/me.jpg' (leave '' for none)
+      contact: { tree: 'about', id: 'contact' },   // the "Contact" button opens this node
+      // Node colour(s), used in order. White by default. Add more to bring colour back,
+      // or set  color: '#ff0000'  on any single node.
+      palette: ['#ffffff']
+    };
+
+    /* There are two trees (tabs): "about" and "projects".
+       Each node is one block. For each one you can change:
+         id        a unique short name (used by "parents")
+         parents   which node(s) it connects back to. The first node in a tree
+                   is the start and has no parents. Positions are automatic: the
+                   branches grow out of the start node by themselves.
+         icon      one of: user, briefcase, code, mail, gamepad, star, cube,
+                   bolt, grid
+         label     the name under the node
+         meta      optional small line under the label (e.g. '2026 · Unreal')
          title     big heading in the panel
          subtitle  small line under the heading
          image     optional, e.g. 'images/game1.png' (leave '' for none)
-         body      your text. Use <p>...</p> for paragraphs. <h3> and <ul> also work.
-         facts     rows of [name, value] shown under the text
+         body      your text. Use <p>...</p> for paragraphs. <h3> and <ul> work too.
+         facts     rows of [name, value]. Values can contain links:
+                   ['Team', '<a href="https://..." target="_blank" rel="noopener">Name</a>']
          links     buttons, as [text, url]
-       Keep the text inside the backticks ` `.
-       ===================================================================== */
+       Keep the commas between blocks. To add a game, copy a game block, give
+       it a new id and set parents: ['overview'].
+       A node with  locked: true  shows as a dashed "more to come" node. */
 
-    const BRANCHES = {
-      about: { name: 'About me', color: '#35e08a' },
-      games: { name: 'Games',    color: '#ffc233' }
+    const TREES = {
+
+      about: {
+        name: 'About',
+        nodes: [
+          {
+            id: 'who', icon: 'user',
+            label: 'Who I am',
+            title: 'Who I am',
+            subtitle: 'Game developer',
+            image: '',
+            body: `
+              <p>Write your introduction here: who you are, how you got into making games, and what you enjoy most about it.</p>
+              <p>Add another paragraph if you like.</p>
+            `,
+            facts: [['Based in', 'Your town, UK'], ['Focus', 'Gameplay, tools, etc.']],
+            links: []
+          },
+          {
+            id: 'exp', icon: 'briefcase', parents: ['who'],
+            label: 'Experience',
+            title: 'Experience',
+            subtitle: 'Where I have worked',
+            image: '',
+            body: `
+              <h3>Job title, Company</h3>
+              <p>2024 to now. Describe what you did and what you achieved.</p>
+              <h3>Previous role or course</h3>
+              <p>2022 to 2024. Describe what you did and what you achieved.</p>
+            `,
+            facts: [],
+            links: []
+          },
+          {
+            id: 'skills', icon: 'code', parents: ['who'],
+            label: 'Tools & skills',
+            title: 'Tools & skills',
+            subtitle: 'What I build with',
+            image: '',
+            body: `
+              <p>Write about the tools and skills you are strongest in.</p>
+            `,
+            facts: [['Engines', 'Unity, Unreal, Godot'], ['Languages', 'C#, C++, Python'], ['Other', 'Git, Blender']],
+            links: []
+          },
+          {
+            id: 'contact', icon: 'mail', parents: ['exp', 'skills'],
+            label: 'Contact',
+            title: 'Get in touch',
+            subtitle: 'Say hello',
+            image: '',
+            body: `
+              <p>Write a short note about what you are looking for and how people can reach you.</p>
+            `,
+            facts: [['Email', 'your@email.com']],
+            links: [['Email me', 'mailto:your@email.com'], ['GitHub', 'https://github.com/BradleyCurtisDev']]
+          }
+        ]
+      },
+
+      projects: {
+        name: 'Projects',
+        nodes: [
+          {
+            id: 'overview', icon: 'grid',
+            label: 'My games',
+            title: 'Projects',
+            subtitle: 'Games I have worked on',
+            image: '',
+            body: `
+              <p>Write a short intro to your work: what kinds of games you make and how the projects fit together.</p>
+            `,
+            facts: [],
+            links: [['itch.io', '#']]
+          },
+          {
+            id: 'g1', icon: 'gamepad', parents: ['overview'],
+            label: 'Game One',
+            meta: '2026 · Unreal',
+            title: 'Game Title One',
+            subtitle: 'Genre, year',
+            image: '',
+            body: `
+              <p>Describe the game: what it is, what you built, and what you are proudest of.</p>
+              <p>Add more paragraphs about the challenges or what you learned.</p>
+            `,
+            facts: [
+              ['Year', '2026'],
+              ['Role', 'Programmer'],
+              ['Made with', 'Unreal, Blueprints'],
+              ['Team', '<a href="https://example.itch.io/" target="_blank" rel="noopener">Name One</a>, <a href="https://example.itch.io/" target="_blank" rel="noopener">Name Two</a>']
+            ],
+            links: [['Play', '#'], ['Source', '#']]
+          },
+          {
+            id: 'g2', icon: 'star', parents: ['overview'],
+            label: 'Game Two',
+            meta: '2024 · Unity',
+            title: 'Game Title Two',
+            subtitle: 'Genre, year',
+            image: '',
+            body: `
+              <p>Describe the game: what it is, what you built, and what you are proudest of.</p>
+            `,
+            facts: [['Year', '2024'], ['Role', 'Gameplay programmer'], ['Made with', 'Unity, C#'], ['Team', 'Team of 4']],
+            links: [['Play', '#']]
+          },
+          {
+            id: 'g3', icon: 'cube', parents: ['overview'],
+            label: 'Game Three',
+            meta: '2023 · Godot',
+            title: 'Game Title Three',
+            subtitle: 'Genre, year',
+            image: '',
+            body: `
+              <p>Describe the game: what it is, what you built, and what you are proudest of.</p>
+            `,
+            facts: [['Year', '2023'], ['Role', 'Solo'], ['Made with', 'Godot'], ['Event', 'Game jam']],
+            links: [['Play', '#']]
+          },
+          { id: 'more', icon: 'lock', parents: ['g3'], locked: true }
+        ]
+      }
     };
 
-    const NODES = [
-
-      /* ---------- ABOUT ME BRANCH ---------- */
-      {
-        id: 'who', branch: 'about', x: 300, y: 560, trunk: true, icon: 'user',
-        label: 'Who I am',
-        title: 'Who I am',
-        subtitle: 'Game developer',
-        image: '',
-        body: `
-          <p>Write your introduction here: who you are, how you got into making games, and what you enjoy most about it.</p>
-          <p>Add another paragraph if you like.</p>
-        `,
-        facts: [['Based in', 'Your town, UK'], ['Focus', 'Gameplay, tools, etc.']],
-        links: []
-      },
-      {
-        id: 'exp', branch: 'about', x: 200, y: 420, parents: ['who'], icon: 'briefcase',
-        label: 'Experience',
-        title: 'Experience',
-        subtitle: 'Where I have worked',
-        image: '',
-        body: `
-          <h3>Job title, Company</h3>
-          <p>2024 to now. Describe what you did and what you achieved.</p>
-          <h3>Previous role or course</h3>
-          <p>2022 to 2024. Describe what you did and what you achieved.</p>
-        `,
-        facts: [],
-        links: []
-      },
-      {
-        id: 'skills', branch: 'about', x: 400, y: 420, parents: ['who'], icon: 'code',
-        label: 'Tools & skills',
-        title: 'Tools & skills',
-        subtitle: 'What I build with',
-        image: '',
-        body: `
-          <p>Write about the tools and skills you are strongest in.</p>
-        `,
-        facts: [['Engines', 'Unity, Unreal, Godot'], ['Languages', 'C#, C++, Python'], ['Other', 'Git, Blender']],
-        links: []
-      },
-      {
-        id: 'contact', branch: 'about', x: 300, y: 280, parents: ['exp', 'skills'], icon: 'mail',
-        label: 'Contact',
-        title: 'Get in touch',
-        subtitle: 'Say hello',
-        image: '',
-        body: `
-          <p>Write a short note about what you are looking for and how people can reach you.</p>
-        `,
-        facts: [['Email', 'your@email.com']],
-        links: [['Email me', 'mailto:your@email.com'], ['GitHub', 'https://github.com/BradleyCurtisDev']]
-      },
-
-      /* ---------- GAMES BRANCH ---------- */
-      {
-        id: 'g1', branch: 'games', x: 700, y: 560, trunk: true, icon: 'gamepad',
-        label: 'Colourways',
-        title: 'Colourways',
-        subtitle: 'Platformer, 2026',
-        image: 'https://img.itch.zone/aW1hZ2UvNDA5ODQ1NS8yNDQyODg0NS5wbmc=/original/ldFu9S.png',
-        body: `
-          <p>Colourways is a small prototype game made in Unreal Engine which was made for a Univerity Game Jam and showcased Guildford Games. The game follows the player highlighting the map as they play through using a "paint to reveal" mechanic.</p>
-        `,
-        facts: [['Year', '2026'], ['Role', 'Programmer'], ['Made with', 'Unreal, Blueprints'], ['Team', '<a href="https://harry-dillamore.itch.io/" target="_blank" rel="noopener">Harry Dillamore</a>, <a href="https://lunavia.itch.io/" target="_blank" rel="noopener">Josie Bellas</a>, <a href="https://princessbleach.itch.io/" target="_blank" rel="noopener">Zoe Efstathiou</a>']],
-        links: [['Play', 'https://harry-dillamore.itch.io/colorways'], ['Source', 'https://github.com/Harry-Dillamore/GameJam_Paint/tree/GuildfordGamesBuild']]
-      },
-      {
-        id: 'g2', branch: 'games', x: 600, y: 420, parents: ['g1'], icon: 'star',
-        label: 'Protocol:Shutdown',
-        title: 'Protocol:Shutdown',
-        subtitle: '2D Shooter, 2025',
-        image: 'https://img.itch.zone/aW1nLzIyOTQzMjkxLnBuZw==/315x250%23c/RAnXWd.png',
-        body: `
-          <p>This fast-paced action game challenges you to battle digital swarms and collect three system CDs across two expansive levels to purge a destructive virus. I built a dynamic combat system featuring responsive dodge rolls and weapon upgrades hidden in pots, and I am proudest of the nostalgic dungeon atmosphere that captures the high-stakes journey to save the internet.</p>
-        `,
-        facts: [['Year', '2025'], ['Role', 'Lead Programmer'], ['Made with', 'Unity, C#'], ['Team', '<a href="https://lunavia.itch.io/" target="_blank" rel="noopener">Josie Bellas</a>']],
-        links: [['Play', 'https://bradleycurtis.itch.io/protocolshutdown']]
-      },
-      {
-        id: 'g3', branch: 'games', x: 800, y: 420, parents: ['g1'], icon: 'cube',
-        label: 'Game Three',
-        title: 'Market Surfer',
-        subtitle: 'Genre, 2026',
-        image: '',
-        body: `
-          <p>Describe the game: what it is, what you built, and what you are proudest of.</p>
-        `,
-        facts: [['Year', '2026'], ['Role', 'Solo'], ['Made with', 'Raylib'], ['Event', 'Game jam']],
-        links: [['Play', 'https://bradleycurtis.itch.io/market-surfer']]
-      },
-      {
-        id: 'g4', branch: 'games', x: 700, y: 280, parents: ['g2', 'g3'], icon: 'bolt',
-        label: 'Game Four',
-        title: 'Game Title Four',
-        subtitle: 'Genre, year',
-        image: '',
-        body: `
-          <p>Describe the game: what it is, what you built, and what you are proudest of.</p>
-        `,
-        facts: [['Year', '2022'], ['Role', 'Programmer'], ['Made with', 'Unity']],
-        links: [['Play', '#']]
-      },
-
-      /* ---------- LOCKED NODES (decoration, "more to come") ---------- */
-      { id: 'la', branch: 'about', x: 130, y: 290, parents: ['exp'],     locked: true },
-      { id: 'lb', branch: 'about', x: 240, y: 150, parents: ['contact'], locked: true },
-      { id: 'lc', branch: 'games', x: 870, y: 290, parents: ['g3'],      locked: true },
-      { id: 'ld', branch: 'games', x: 760, y: 150, parents: ['g4'],      locked: true }
-    ];
-
     /* =====================================================================
-       END OF CONTENT. The code below builds the tree. You shouldn't need to
+       END OF CONTENT. The code below builds the trees. You shouldn't need to
        change it.
        ===================================================================== */
 
@@ -581,15 +576,15 @@
       star: '<path d="M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5L2.5 9.3l6.6-.8z"/>',
       cube: '<path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/>',
       bolt: '<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+      grid: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
       lock: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'
     };
 
     const SVG_NS = 'http://www.w3.org/2000/svg';
-    const STORE_KEY = 'bc-portfolio-visited';
-    const R = 34, R_LOCKED = 26;
-
+    const STORE_KEY = 'bc-tree-v5';
+    const CREAM = '#ffffff';
     const $ = (id) => document.getElementById(id);
-    const app = $('app'), panel = $('panel');
+    const app = $('app'), panel = $('panel'), svg = $('tree'), scene = $('scene'), wrap = $('treeWrap');
 
     function el(name, attrs, parent) {
       const e = document.createElementNS(SVG_NS, name);
@@ -597,156 +592,349 @@
       if (parent) parent.appendChild(e);
       return e;
     }
-
-    const byId = {};
-    NODES.forEach(n => byId[n.id] = n);
-
-    function depth(n) {
-      if (n.trunk || !n.parents) return 0;
-      return 1 + Math.max(...n.parents.map(p => depth(byId[p])));
+    // small stable "random" number from a string, so the layout looks hand-grown but never changes
+    function hash(s) {
+      let h = 2166136261;
+      for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+      return (h >>> 0) / 4294967295;
     }
+    const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // ----- saved progress -----
     let visited = new Set();
     try { visited = new Set(JSON.parse(localStorage.getItem(STORE_KEY) || '[]')); } catch (e) {}
     const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify([...visited])); } catch (e) {} };
 
-    // ----- build edges -----
-    const glowLayer = $('glowLayer'), edgeLayer = $('edgeLayer'),
-          nodeLayer = $('nodeLayer'), labelLayer = $('labelLayer');
-    const edges = [];
-
-    function addEdge(d, node, opts) {
-      const color = BRANCHES[node.branch].color;
-      const delay = (0.2 + depth(node) * 0.4).toFixed(2) + 's';
-      if (!node.locked) {
-        const g = el('path', { d, class: 'edgeglow' }, glowLayer);
-        g.style.setProperty('--c', color);
-        edges.push({ g, node, always: opts.always, glow: true });
-      }
-      const p = el('path', { d, class: 'edge ' + (node.locked ? 'locked' : 'draw'), pathLength: 1 }, edgeLayer);
-      p.style.setProperty('--c', color);
-      p.style.setProperty('--ed', delay);
-      edges.push({ p, node, always: opts.always });
-    }
-
-    NODES.forEach(n => {
-      if (n.trunk) {
-        const bx = n.branch === 'about' ? 488 : 512;
-        addEdge(`M${bx} 790 V680 C${bx} 625,${n.x} 650,${n.x} ${n.y}`, n, { always: true });
-      }
-      (n.parents || []).forEach(pid => {
-        const a = byId[pid], ym = (a.y + n.y) / 2;
-        addEdge(`M${a.x} ${a.y} C${a.x} ${ym},${n.x} ${ym},${n.x} ${n.y}`, n, { always: false });
-      });
-    });
-
-    // ----- build nodes -----
-    const nodeEls = {};
-    NODES.forEach(n => {
-      const color = BRANCHES[n.branch].color;
-      const r = n.locked ? R_LOCKED : R;
-      const g = el('g', { class: 'node' + (n.locked ? ' locked' : ''), transform: `translate(${n.x} ${n.y})` }, nodeLayer);
-      g.style.setProperty('--c', color);
-      g.style.setProperty('--nd', (0.55 + depth(n) * 0.4).toFixed(2) + 's');
-
-      if (n.locked) {
-        el('title', {}, g).textContent = 'Locked: more to come';
-        g.setAttribute('aria-hidden', 'true');
-      } else {
-        g.setAttribute('tabindex', '0');
-        g.setAttribute('role', 'button');
-        g.setAttribute('aria-label', 'Open ' + n.label);
-        if (n.trunk) el('circle', { class: 'pulse', r }, g);
-      }
-
-      const inner = el('g', { class: 'inner' }, g);
-      if (!n.locked) el('circle', { class: 'glow', r: r + 18, fill: `url(#g-${n.branch})` }, inner);
-      el('circle', { class: 'disc', r }, inner);
-      const ic = el('g', { class: 'icon', transform: 'translate(-14 -14) scale(1.1667)' }, inner);
-      ic.innerHTML = ICONS[n.locked ? 'lock' : n.icon];
-      if (n.locked) ic.setAttribute('transform', 'translate(-11 -11) scale(0.9167)');
-
-      if (!n.locked) {
-        const pill = el('g', { class: 'pill', transform: `translate(0 ${r})` }, g);
-        el('rect', { rx: 10, ry: 10, height: 20, y: -10 }, pill);
-        const t = el('text', { y: 1 }, pill);
-        t.textContent = n.label;
-
-        g.addEventListener('click', () => openNode(n.id));
-        g.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openNode(n.id); }
-        });
-      }
-      nodeEls[n.id] = g;
-    });
-
-    // size pills to their text (re-run once fonts have loaded)
-    function fitPills() {
-      document.querySelectorAll('.pill').forEach(p => {
-        const w = p.querySelector('text').getBBox().width + 22;
-        const rect = p.querySelector('rect');
-        rect.setAttribute('width', w);
-        rect.setAttribute('x', -w / 2);
-      });
-    }
-    fitPills();
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitPills);
-
-    // ----- branch counters near the trunks -----
-    const counters = {};
-    [['about', 458, 'end'], ['games', 542, 'start']].forEach(([b, x, anchor]) => {
-      const c = BRANCHES[b].color;
-      const lab = el('text', { x, y: 690, 'text-anchor': anchor, class: 'count-label' }, labelLayer);
-      lab.style.setProperty('--c', c);
-      lab.textContent = BRANCHES[b].name;
-      const num = el('text', { x, y: 728, 'text-anchor': anchor, class: 'count-num' }, labelLayer);
-      num.style.setProperty('--c', c);
-      counters[b] = num;
-    });
-
-    // ----- refresh visual state -----
+    // ----- state -----
+    const keys = Object.keys(TREES);
+    let current = keys[0];
     let selected = null;
+    let nodeEls = {}, edgeEls = [], nodePos = {}, nodeColors = {};
+    const mq = window.matchMedia('(max-width: 760px)');
+    let horizontal = !mq.matches;     // desktop: grows sideways. Phone: grows upward.
+
+    // ----- header -----
+    $('pname').textContent = CONFIG.name;
+    $('pclass').textContent = CONFIG.role;
+    if (CONFIG.avatar) {
+      const im = document.createElement('img');
+      im.src = CONFIG.avatar; im.alt = CONFIG.name;
+      $('avatar').appendChild(im);
+      $('avatar').hidden = false;
+    }
+
+    function wrapLabel(text, max) {
+      const lines = [];
+      let cur = '';
+      text.split(' ').forEach(w => {
+        if (cur && (cur + ' ' + w).length > max) { lines.push(cur); cur = w; }
+        else cur = cur ? cur + ' ' + w : w;
+      });
+      if (cur) lines.push(cur);
+      return lines;
+    }
+
+    /* ---------------------------------------------------------------------
+       LAYOUT: branches fan out from the first node in rings. Each node sits
+       near the average direction of its parents, is pushed apart from its
+       neighbours, then nudged by a small fixed amount so it looks grown, not
+       gridded. Rings widen automatically when there are lots of nodes.
+       --------------------------------------------------------------------- */
+    function layoutTree(tree, H) {
+      const nodes = tree.nodes, byId = {};
+      nodes.forEach(n => byId[n.id] = n);
+      const rootId = nodes[0].id;
+
+      const parentsOf = {};
+      nodes.forEach((n, i) => {
+        let ps = (n.parents || []).filter(p => byId[p] && p !== n.id);
+        if (i === 0) ps = [];
+        else if (!ps.length) ps = [rootId];
+        parentsOf[n.id] = ps;
+      });
+
+      const dep = {};
+      const depth = (id, stack) => {
+        if (id in dep) return dep[id];
+        const ps = parentsOf[id].filter(p => !stack.includes(p));
+        dep[id] = ps.length ? 1 + Math.max(...ps.map(p => depth(p, stack.concat(id)))) : 0;
+        return dep[id];
+      };
+      nodes.forEach(n => depth(n.id, []));
+      const maxD = Math.max(...Object.values(dep));
+      const cols = Array.from({ length: maxD + 1 }, () => []);
+      nodes.forEach(n => cols[dep[n.id]].push(n));
+
+      const MIN = H ? 160 : 140, STEP = H ? 270 : 200, HALF = (H ? 80 : 70) * Math.PI / 180;
+      const FAN = (H ? 40 : 32) * Math.PI / 180;   // angle between neighbouring first-tier nodes
+      const ang = { [rootId]: 0 }, rad = { [rootId]: 0 };
+      let prevR = 0;
+      for (let d = 1; d <= maxD; d++) {
+        const col = cols[d], n = col.length;
+        const desired = col.map((nd, i) => {
+          if (d === 1) return n === 1 ? 0 : (i - (n - 1) / 2) * Math.min(2 * HALF / (n - 1), FAN);
+          const ps = parentsOf[nd.id];
+          return ps.reduce((s, p) => s + ang[p], 0) / ps.length;
+        });
+        const order = col.map((_, i) => i).sort((a, b) => desired[a] - desired[b] || a - b);
+        let r = prevR + STEP, placed = null;
+        for (let it = 0; it < 80; it++) {
+          const gap = 2 * Math.asin(Math.min(1, MIN / (2 * r)));
+          const a = [];
+          order.forEach((idx, k) => { a[k] = k === 0 ? desired[idx] : Math.max(desired[idx], a[k - 1] + gap); });
+          const shift = a.reduce((s, v, k) => s + (v - desired[order[k]]), 0) / a.length;
+          placed = a.map(v => v - shift);
+          if (placed[placed.length - 1] - placed[0] <= 2 * HALF) break;
+          r += 24;
+        }
+        // crowded rings zigzag in and out a little, which looks grown rather than lined up
+        order.forEach((idx, k) => {
+          ang[col[idx].id] = placed[k];
+          rad[col[idx].id] = r + (n >= 4 ? (k % 2 ? 1 : -1) * (H ? 42 : 26) : 0);
+        });
+        prevR = r;
+      }
+
+      const pos = {};
+      nodes.forEach(nd => {
+        const isRoot = nd.id === rootId;
+        const a = ang[nd.id] + (isRoot ? 0 : (hash(nd.id + 'a') - 0.5) * (H ? 0.09 : 0.06));
+        const r = rad[nd.id] + (isRoot ? 0 : (hash(nd.id + 'r') - 0.5) * (H ? 40 : 28));
+        const x = H ? r * Math.cos(a) : r * Math.sin(a);
+        const y = H ? r * Math.sin(a) : -r * Math.cos(a);
+        pos[nd.id] = { x, y, s: nd.locked ? 50 : (isRoot ? 92 : 72) };
+      });
+      return { pos, dep, parentsOf, rootId };
+    }
+
+    // curved branch from a parent to a child
+    function branchPath(P, C, parentIsRoot) {
+      const unit = (x, y) => { const m = Math.hypot(x, y) || 1; return [x / m, y / m]; };
+      const dist = Math.hypot(C.x - P.x, C.y - P.y);
+      const dC = unit(C.x, C.y);
+      const dP = parentIsRoot ? unit(C.x - P.x, C.y - P.y) : unit(P.x, P.y);
+      const k = dist * 0.42;
+      return `M${P.x} ${P.y} C${P.x + dP[0] * k} ${P.y + dP[1] * k}, ${C.x - dC[0] * k} ${C.y - dC[1] * k}, ${C.x} ${C.y}`;
+    }
+
+    // ----- draw the current tree -----
+    function render() {
+      const tree = TREES[current], H = horizontal;
+      scene.innerHTML = '';
+      nodeEls = {}; edgeEls = []; nodeColors = {};
+
+      const { pos, dep, parentsOf, rootId } = layoutTree(tree, H);
+      nodePos = pos;
+      const vals = Object.values(pos);
+      const minX = Math.min(...vals.map(p => p.x)), maxX = Math.max(...vals.map(p => p.x));
+      const minY = Math.min(...vals.map(p => p.y)), maxY = Math.max(...vals.map(p => p.y));
+      const ox = (H ? 120 : 80) - minX, oy = (H ? 120 : 100) - minY;
+      vals.forEach(p => { p.x += ox; p.y += oy; });
+      const W = (maxX - minX) + (H ? 240 : 160), HT = (maxY - minY) + (H ? 260 : 240);
+      // on big screens, let small trees grow a little so they fill the space
+      let k = 1;
+      if (H) {
+        const availW = Math.max(320, wrap.clientWidth - (window.innerWidth > 860 ? 460 : 0));
+        k = Math.min(1.35, Math.max(0.85, Math.min(availW / W, wrap.clientHeight / HT)));
+      }
+      svg.setAttribute('width', Math.round(W * k));
+      svg.setAttribute('height', Math.round(HT * k));
+      svg.setAttribute('viewBox', `0 0 ${W} ${HT}`);
+
+      // colours: start node is white, everything else walks through the palette
+      let ci = 0;
+      tree.nodes.forEach(n => {
+        nodeColors[n.id] = n.color || (n.id === rootId ? CREAM : CONFIG.palette[ci++ % CONFIG.palette.length]);
+      });
+
+      const root = pos[rootId];
+      const gEdges = el('g', {}, scene), gNodes = el('g', {}, scene);
+
+      // branches
+      tree.nodes.forEach(n => {
+        parentsOf[n.id].forEach(pid => {
+          const d = branchPath(pos[pid], pos[n.id], pid === rootId);
+          const w = [0, 5, 4, 3.4, 3][Math.min(dep[n.id], 4)];
+          const b = el('path', { d, pathLength: 1, class: 'branch ' + (n.locked ? 'ghost' : 'draw'), 'stroke-width': n.locked ? 2.5 : w }, gEdges);
+          b.style.setProperty('--ed', (0.1 + dep[n.id] * 0.28).toFixed(2) + 's');
+          b.style.setProperty('--bc', nodeColors[n.id]);
+          edgeEls.push({ b, child: n.id });
+        });
+      });
+
+      // nodes
+      tree.nodes.forEach(n => {
+        const p = pos[n.id], s = p.s, h = s / 2, isRoot = n.id === rootId;
+        const g = el('g', { class: 'node' + (n.locked ? ' locked' : ''), transform: `translate(${p.x} ${p.y})` }, gNodes);
+        g.style.setProperty('--nd', (0.12 + dep[n.id] * 0.28).toFixed(2) + 's');
+        g.style.setProperty('--nc', nodeColors[n.id]);
+
+        if (n.locked) {
+          g.setAttribute('aria-hidden', 'true');
+          el('title', {}, g).textContent = 'More to come';
+        } else {
+          g.setAttribute('tabindex', '0');
+          g.setAttribute('role', 'button');
+          g.setAttribute('aria-label', 'Open ' + n.label + (n.meta ? ', ' + n.meta : ''));
+        }
+
+        const fl = el('g', { class: 'float' }, el('g', { class: 'appear' }, g));
+        fl.style.setProperty('--fd', (4.5 + hash(n.id + 'f') * 2.5).toFixed(2) + 's');
+        fl.style.setProperty('--fdl', (-hash(n.id + 'g') * 6).toFixed(2) + 's');
+        const hv = el('g', { class: 'hover' }, fl);
+        el('circle', { class: 'shadow', r: h, cy: 6 }, hv);
+        el('circle', { class: 'ring', r: h + 8 }, hv);
+        el('circle', { class: 'hit', r: h + 12 }, hv);
+        el('circle', { class: 'disc', r: h }, hv);
+        const sc = (s * 0.42) / 24;
+        el('g', { class: 'icon', transform: `translate(${-12 * sc} ${-12 * sc}) scale(${sc})` }, hv).innerHTML = ICONS[n.icon] || ICONS.star;
+
+        if (!n.locked) {
+          const bd = el('g', { class: 'badge' }, el('g', { transform: `translate(${h * 0.72} ${-h * 0.72})` }, hv));
+          el('circle', { r: 11 }, bd);
+          el('path', { d: 'M-4.5 0.5 L-1.2 3.8 L4.6 -3' }, bd);
+
+          const lines = wrapLabel(n.label, H ? 18 : 13);
+          const t = el('text', { class: 'nlabel', x: 0, y: h + 35 }, fl);
+          lines.forEach((ln, i) => {
+            const ts = el('tspan', { x: 0, dy: i ? '1.2em' : 0 }, t);
+            ts.textContent = ln;
+          });
+          if (n.meta) {
+            const m = el('text', { class: 'nmeta', x: 0, y: h + 35 + 19 + (lines.length - 1) * 18 }, fl);
+            m.textContent = n.meta;
+          }
+          if (isRoot) {
+            const hint = el('text', { class: 'starthint', x: 0, y: -h - 18 }, fl);
+            hint.textContent = 'Start here';
+          }
+          g.addEventListener('click', () => openNode(n.id));
+          g.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openNode(n.id); }
+          });
+        }
+        nodeEls[n.id] = g;
+      });
+
+      refresh();
+      // open the view on the start node
+      if (H) { wrap.scrollLeft = 0; wrap.scrollTop = Math.max(0, root.y * k - wrap.clientHeight / 2); }
+      else { wrap.scrollLeft = Math.max(0, root.x * k - wrap.clientWidth / 2); wrap.scrollTop = wrap.scrollHeight; }
+    }
+
+    // ----- update lit/selected state and the unlocked counter -----
     function refresh() {
-      NODES.forEach(n => {
-        if (n.locked) return;
-        nodeEls[n.id].classList.toggle('visited', visited.has(n.id));
-        nodeEls[n.id].classList.toggle('selected', selected === n.id);
+      TREES[current].nodes.forEach(n => {
+        const g = nodeEls[n.id];
+        if (!g || n.locked) return;
+        g.classList.toggle('visited', visited.has(n.id));
+        g.classList.toggle('selected', selected === n.id);
       });
-      edges.forEach(e => {
-        const lit = e.always || visited.has(e.node.id);
-        (e.p || e.g).classList.toggle('lit', lit);
-      });
+      edgeEls.forEach(e => e.b.classList.toggle('lit', visited.has(e.child)));
       let total = 0, done = 0;
-      Object.keys(BRANCHES).forEach(b => {
-        const list = NODES.filter(n => n.branch === b && !n.locked);
-        const d = list.filter(n => visited.has(n.id)).length;
-        counters[b].textContent = `${d}/${list.length}`;
-        total += list.length; done += d;
+      keys.forEach(k => TREES[k].nodes.forEach(n => { if (!n.locked) { total++; if (visited.has(n.id)) done++; } }));
+      $('count').textContent = `${done} of ${total}`;
+      app.classList.toggle('started', visited.size > 0);
+    }
+
+    // a little burst of confetti when a node is unlocked for the first time
+    function burst(id) {
+      const p = nodePos[id];
+      if (!p || reduceMotion()) return;
+      const g = el('g', { transform: `translate(${p.x} ${p.y})`, 'pointer-events': 'none' }, scene);
+      for (let i = 0; i < 12; i++) {
+        const a = (i / 12) * Math.PI * 2 + hash(id + i) * 0.5;
+        const dist = p.s * 0.85 + hash(id + 'd' + i) * 46;
+        const fill = i % 2 ? nodeColors[id] : '#8c8c8c';
+        const shape = i % 3 === 0 ? el('rect', { x: -4, y: -4, width: 8, height: 8, rx: 1.5 }, g)
+                    : i % 3 === 1 ? el('circle', { r: 4.5 }, g)
+                    : el('path', { d: 'M0 -6 L6 5 L-6 5 Z' }, g);
+        shape.setAttribute('class', 'spark');
+        shape.setAttribute('fill', fill);
+        shape.style.setProperty('--dx', (Math.cos(a) * dist).toFixed(1) + 'px');
+        shape.style.setProperty('--dy', (Math.sin(a) * dist).toFixed(1) + 'px');
+        shape.style.setProperty('--rot', Math.round((hash(id + 'r' + i) - 0.5) * 360) + 'deg');
+      }
+      setTimeout(() => g.remove(), 900);
+    }
+
+    // ----- tabs -----
+    const tabsEl = $('tabs');
+    keys.forEach(k => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'tab';
+      b.id = 'tab-' + k;
+      b.setAttribute('role', 'tab');
+      b.textContent = TREES[k].name;
+      b.addEventListener('click', () => setTab(k));
+      b.addEventListener('keydown', (e) => {
+        const i = keys.indexOf(k);
+        let to = null;
+        if (e.key === 'ArrowRight') to = keys[(i + 1) % keys.length];
+        if (e.key === 'ArrowLeft') to = keys[(i - 1 + keys.length) % keys.length];
+        if (to) { e.preventDefault(); setTab(to); $('tab-' + to).focus(); }
       });
-      $('count').textContent = `${done}/${total}`;
-      document.body.classList.toggle('started', visited.size > 0);
+      tabsEl.appendChild(b);
+    });
+
+    function setTab(k) {
+      if (!TREES[k]) return;
+      closePanel(true);
+      current = k;
+      keys.forEach(key => {
+        const b = $('tab-' + key);
+        b.setAttribute('aria-selected', key === k ? 'true' : 'false');
+        b.tabIndex = key === k ? 0 : -1;
+      });
+      try { history.replaceState(null, '', '#' + k); } catch (e) {}
+      render();
     }
 
     // ----- side panel -----
-    let lastFocus = null;
     function openNode(id) {
-      const n = byId[id], b = BRANCHES[n.branch];
-      panel.style.setProperty('--c', b.color);
-      $('pTag').textContent = b.name;
+      const list = TREES[current].nodes.filter(n => !n.locked);
+      const i = list.findIndex(x => x.id === id);
+      if (i < 0) return;
+      const n = list[i];
+      panel.style.setProperty('--nc', nodeColors[id]);
+      $('pTag').textContent = TREES[current].name;
       $('panelTitle').textContent = n.title;
       $('pSub').textContent = n.subtitle || '';
       $('pSub').style.display = n.subtitle ? '' : 'none';
-      $('pMedia').innerHTML = n.image ? `<img src="${n.image}" alt="${n.title}">` : '';
+      $('pMedia').innerHTML = '';
+      if (n.image) {
+        const img = document.createElement('img');
+        img.src = n.image;
+        img.alt = n.title;
+        $('pMedia').appendChild(img);
+      }
       $('pBody').innerHTML = n.body || '';
       $('pFacts').innerHTML = (n.facts || []).map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
       $('pLinks').innerHTML = (n.links || []).map(([t, u]) =>
         `<a href="${u}" ${u.startsWith('http') ? 'target="_blank" rel="noopener"' : ''}>${t}</a>`).join('');
 
+      const setPg = (btn, node, label) => {
+        btn.hidden = !node;
+        if (!node) { btn.innerHTML = ''; return; }
+        btn.innerHTML = '<small></small><span></span>';
+        btn.firstChild.textContent = label;
+        btn.lastChild.textContent = node.label;
+        btn.onclick = () => openNode(node.id);
+      };
+      setPg($('pgPrev'), list[i - 1], 'Previous');
+      setPg($('pgNext'), list[i + 1], 'Next');
+
+      const isNew = !visited.has(id);
       visited.add(id); save();
       selected = id;
-      lastFocus = nodeEls[id];
       refresh();
+      if (isNew && nodeEls[id]) {
+        nodeEls[id].classList.add('unlock');
+        setTimeout(() => nodeEls[id] && nodeEls[id].classList.remove('unlock'), 700);
+        burst(id);
+      }
+      try { history.replaceState(null, '', '#' + current + '/' + id); } catch (e) {}
 
       app.classList.add('panel-open');
       panel.classList.add('open');
@@ -755,36 +943,52 @@
       $('close').focus({ preventScroll: true });
     }
 
-    function closePanel() {
+    function closePanel(skipFocus) {
       if (!panel.classList.contains('open')) return;
+      const back = nodeEls[selected];
       selected = null;
-      refresh();
       app.classList.remove('panel-open');
       panel.classList.remove('open');
       panel.setAttribute('aria-hidden', 'true');
-      if (lastFocus) lastFocus.focus({ preventScroll: true });
-    }
-
-    function resetTree() {
-      visited = new Set(); save();
-      closePanel();
-      selected = null;
       refresh();
+      try { history.replaceState(null, '', '#' + current); } catch (e) {}
+      if (!skipFocus && back) back.focus({ preventScroll: true });
     }
 
-    $('close').addEventListener('click', closePanel);
-    $('scrim').addEventListener('click', closePanel);
-    $('reset').addEventListener('click', resetTree);
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closePanel();
-      if ((e.key === 'r' || e.key === 'R') && !e.ctrlKey && !e.metaKey && !e.altKey) resetTree();
+    $('close').addEventListener('click', () => closePanel());
+    $('scrim').addEventListener('click', () => closePanel());
+    $('reset').addEventListener('click', () => { visited = new Set(); save(); closePanel(true); refresh(); });
+    $('cta').addEventListener('click', () => {
+      const c = CONFIG.contact;
+      if (c && TREES[c.tree] && TREES[c.tree].nodes.some(n => n.id === c.id)) {
+        if (current !== c.tree) setTab(c.tree);
+        openNode(c.id);
+      }
     });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePanel(); });
 
-    refresh();
+    function fromHash() {
+      const [t, n] = location.hash.slice(1).split('/');
+      if (TREES[t] && t !== current) setTab(t);
+      if (TREES[t] && n) openNode(n);
+      else if (TREES[t]) closePanel(true);
+    }
+    window.addEventListener('hashchange', fromHash);
 
-    // centre the tree on small screens where it scrolls sideways
-    const wrap = $('treeWrap');
-    wrap.scrollLeft = (wrap.scrollWidth - wrap.clientWidth) / 2;
+    const onLayoutChange = () => { horizontal = !mq.matches; render(); };
+    if (mq.addEventListener) mq.addEventListener('change', onLayoutChange);
+    else if (mq.addListener) mq.addListener(onLayoutChange);
+
+    // keep the desktop side panel below the header so the tabs stay clickable
+    const setBarH = () => app.style.setProperty('--bar-h', $('hud').offsetHeight + 'px');
+    setBarH();
+    window.addEventListener('resize', setBarH);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(setBarH);
+
+    // start
+    const start = location.hash.slice(1).split('/');
+    setTab(TREES[start[0]] ? start[0] : keys[0]);
+    if (TREES[start[0]] && start[1]) openNode(start[1]);
   </script>
 </body>
 </html>

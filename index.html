@@ -932,28 +932,26 @@
         nodes: [
           {
             id: 'who', icon: 'user',
-            label: 'Who I am',
-            title: 'Who I am',
+            label: 'About Me',
+            title: 'About Me',
             subtitle: 'Game developer',
             image: '',
             body: `
-              <p>Write your introduction here: who you are, how you got into making games, and what you enjoy most about it.</p>
-              <p>Add another paragraph if you like.</p>
+              <p>Im Bradley, A 3rd Year BCs Game Development student at UCA Farnham. I mainly enjoy programming game systems and technical art implementations into games. I have 3+ years experience in Unreal Engine and Unity and have also worked using Raylib, Python and Java for games.</p>
             `,
-            facts: [['Based in', 'Your town, UK'], ['Focus', 'Gameplay, tools, etc.']],
+            facts: [['Based in', 'Surrey, UK'], ['Focus', 'Gameplay Systems, Technical Art, Tools Programming']],
             links: []
           },
           {
             id: 'exp', icon: 'briefcase', parents: ['who'],
             label: 'Experience',
             title: 'Experience',
-            subtitle: 'Where I have worked',
             image: '',
             body: `
-              <h3>Job title, Company</h3>
-              <p>2024 to now. Describe what you did and what you achieved.</p>
-              <h3>Previous role or course</h3>
-              <p>2022 to 2024. Describe what you did and what you achieved.</p>
+              <h3>Education</h3>
+              <p>BSc Game Development at the University for the Creative Arts (UCA), currently in my third year. Before that, A-Levels in Maths, English Literature and Physics at Didcot Sixth Form.</p>
+              <h3>Achievements</h3>
+              <p>Senior IT Olympiad, Gold Certificate (2021) and Bronze Certificate (2019), at Thomas More College in South Africa.</p>
             `,
             facts: [],
             links: []
@@ -965,22 +963,20 @@
             subtitle: 'What I build with',
             image: '',
             body: `
-              <p>Write about the tools and skills you are strongest in.</p>
+               <p>What I enjoy most is programming game systems and technical art. I've built games in Unreal Engine, Unity and Raylib, and I also have experience with Java, Python and databases.</p>
             `,
-            facts: [['Engines', 'Unity, Unreal, Godot'], ['Languages', 'C#, C++, Python'], ['Other', 'Git, Blender']],
+            facts: [
+              ['Engines', 'Unreal Engine, Unity, Raylib'], ['Languages', 'C#, C++, C, Blueprints, Java, Python'], ['Other', 'Databases, Git, Github'],
+            ],
             links: []
           },
           {
             id: 'contact', icon: 'mail', parents: ['exp', 'skills'],
             label: 'Contact',
             title: 'Get in touch',
-            subtitle: 'Say hello',
             image: '',
-            body: `
-              <p>Write a short note about what you are looking for and how people can reach you.</p>
-            `,
-            facts: [['Email', 'your@email.com']],
-            links: [['Email me', 'mailto:your@email.com'], ['GitHub', 'https://github.com/BradleyCurtisDev']]
+            facts: [['Email', 'bradleypetercurtis@gmail.com']],
+            links: [['Email me', 'mailto:bradleypetercurtis@gmail.com'], ['LinkedIn', 'https://www.linkedin.com/in/bradley-curtis-7782a5392/']]
           }
         ]
       },
@@ -990,15 +986,19 @@
         nodes: [
           {
             id: 'overview', icon: 'grid',
-            label: 'My games',
+            label: 'My projects',
             title: 'Projects',
-            subtitle: 'Games I have worked on',
             image: '',
             body: `
-              <p>Write a short intro to your work: what kinds of games you make and how the projects fit together.</p>
+               <p>These are three games I've worked on, each built with a different tool: Unreal Engine with Blueprints and C++, Unity with C#, and Raylib with C. Two were team projects and one I made on my own.</p>
+              <p>Protocol:Shutdown and Market Surfer can be played in your browser, and Colourways is a download. Open any game to see what it is, what I did on it, and where to play it.</p>
             `,
-            facts: [],
-            links: [['itch.io', '#']]
+            facts: [
+              ['Tools', 'Unreal Engine, Unity, Raylib'],
+              ['Code', 'Blueprints, C++, C#, C'],
+              ['Focus', 'Game Systems, Technical Art']
+            ],
+            links: [['itch.io', 'https://bradleycurtis.itch.io'], ['GitHub', 'https://github.com/BradleyCurtisDev']]
           },
           {
             id: 'g1', icon: 'gamepad', parents: ['overview'],
